@@ -127,59 +127,6 @@ export function createEnvironment(scene) {
   const stars = new THREE.Points(starsGeo, starsMat);
   scene.add(stars);
 
-  // Compass rose
-  const compassGroup = new THREE.Group();
-  compassGroup.position.set(hw + 2.5, 0.01, 0);
-  scene.add(compassGroup);
-
-  const ringGeo = new THREE.RingGeometry(0.55, 0.6, 32);
-  const ringMat = new THREE.MeshBasicMaterial({
-    color: 0x333333, side: THREE.DoubleSide,
-  });
-  const ring = new THREE.Mesh(ringGeo, ringMat);
-  ring.rotation.x = -Math.PI / 2;
-  compassGroup.add(ring);
-
-  const innerRingGeo = new THREE.RingGeometry(0.25, 0.28, 32);
-  const innerRing = new THREE.Mesh(innerRingGeo, ringMat);
-  innerRing.rotation.x = -Math.PI / 2;
-  compassGroup.add(innerRing);
-
-  const northArrowShape = new THREE.Shape();
-  northArrowShape.moveTo(-0.08, 0);
-  northArrowShape.lineTo(0, 0.5);
-  northArrowShape.lineTo(0.08, 0);
-  northArrowShape.closePath();
-  const northArrow = new THREE.Mesh(
-    new THREE.ShapeGeometry(northArrowShape),
-    new THREE.MeshBasicMaterial({ color: 0xcc3333, side: THREE.DoubleSide }),
-  );
-  northArrow.rotation.x = -Math.PI / 2;
-  compassGroup.add(northArrow);
-
-  const southArrowShape = new THREE.Shape();
-  southArrowShape.moveTo(-0.08, 0);
-  southArrowShape.lineTo(0, -0.5);
-  southArrowShape.lineTo(0.08, 0);
-  southArrowShape.closePath();
-  const southArrow = new THREE.Mesh(
-    new THREE.ShapeGeometry(southArrowShape),
-    new THREE.MeshBasicMaterial({ color: 0x666666, side: THREE.DoubleSide }),
-  );
-  southArrow.rotation.x = -Math.PI / 2;
-  compassGroup.add(southArrow);
-
-  const tickMat = new THREE.MeshBasicMaterial({ color: 0x555555 });
-  const eTick = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.22, 0.04), tickMat,
-  );
-  eTick.rotation.x = -Math.PI / 2;
-  eTick.position.set(0.4, 0, 0);
-  compassGroup.add(eTick);
-  const wTick = eTick.clone();
-  wTick.position.set(-0.4, 0, 0);
-  compassGroup.add(wTick);
-
   const daySunColor = new THREE.Color(0xFFF4E0);
   const nightSunColor = new THREE.Color(0xC4D4FF);
   let transitionProgress = 1;

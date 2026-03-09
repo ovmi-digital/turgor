@@ -41,7 +41,6 @@ export function createGreenhouse(scene) {
   const hl = GH.l / 2;
   const wh = GH.wallH;
   const ph = GH.peakH;
-  const roofAngle = Math.atan2(ph - wh, hw);
   const glassMat = new THREE.MeshPhysicalMaterial({
     color: 0xffffff, transparent: true, opacity: 0.15,
     roughness: 0.05, metalness: 0, side: THREE.DoubleSide, depthWrite: false,
@@ -141,20 +140,18 @@ export function createGreenhouse(scene) {
   northGable.rotation.y = Math.PI;
   glassGroup.add(northGable);
 
-  const roofSlope = Math.sqrt(hw * hw + (ph - wh) * (ph - wh));
-  const roofGeo = new THREE.PlaneGeometry(roofSlope, GH.l);
-  const westRoof = new THREE.Mesh(roofGeo, glassMat);
-  westRoof.position.set(-hw / 2, (wh + ph) / 2, 0);
-  westRoof.rotation.order = 'XZY';
-  westRoof.rotation.x = -Math.PI / 2;
-  westRoof.rotation.z = roofAngle;
-  glassGroup.add(westRoof);
-  const eastRoof = new THREE.Mesh(roofGeo.clone(), glassMat);
-  eastRoof.position.set(hw / 2, (wh + ph) / 2, 0);
-  eastRoof.rotation.order = 'XZY';
-  eastRoof.rotation.x = -Math.PI / 2;
-  eastRoof.rotation.z = -roofAngle;
-  glassGroup.add(eastRoof);
+  const makeRoofPanel = (x1, x2) => {
+    const verts = new Float32Array([
+      x1, wh, -hl,  x2, ph, -hl,  x2, ph, hl,
+      x1, wh, -hl,  x2, ph, hl,   x1, wh, hl,
+    ]);
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(verts, 3));
+    geo.computeVertexNormals();
+    return new THREE.Mesh(geo, glassMat);
+  };
+  glassGroup.add(makeRoofPanel(-hw, 0));
+  glassGroup.add(makeRoofPanel(hw, 0));
 
   return { group: ghGroup, frameGroup, glassGroup, floorMesh, innerFloor };
 }

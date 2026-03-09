@@ -90,6 +90,17 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
               </p>
             </div>
             <div id="labels-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+            <div id="compass" class="absolute top-3 right-3 pointer-events-none" style="width:56px;height:56px;">
+              <div id="compass-ring" style="width:100%;height:100%;position:relative;">
+                <svg viewBox="0 0 56 56" style="width:100%;height:100%;">
+                  <circle cx="28" cy="28" r="26" fill="rgba(0,0,0,0.35)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+                </svg>
+                <span class="compass-dir" style="top:2px;left:50%;transform:translateX(-50%);" id="compass-n">N</span>
+                <span class="compass-dir" style="bottom:2px;left:50%;transform:translateX(-50%);" id="compass-s">S</span>
+                <span class="compass-dir" style="left:3px;top:50%;transform:translateY(-50%);" id="compass-w">W</span>
+                <span class="compass-dir" style="right:3px;top:50%;transform:translateY(-50%);" id="compass-e">E</span>
+              </div>
+            </div>
           </div>
 
           <!-- Info Panel -->
@@ -296,6 +307,16 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
     details summary::-webkit-details-marker { display: none; }
     details summary::before { content: '+ '; font-weight: 900; margin-right: 0.25rem; }
     details[open] summary::before { content: '- '; }
+
+    .compass-dir {
+      position: absolute;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.8);
+      line-height: 1;
+    }
+    #compass-n { color: #f87171; }
 
     .label-3d {
       position: absolute;

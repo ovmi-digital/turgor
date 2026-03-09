@@ -83,6 +83,9 @@ export function init(canvasEl, viewport) {
     }
   });
 
+  // Compass HUD
+  const compassRing = document.getElementById('compass-ring');
+
   // Animation tick
   core.onTick((dt) => {
     const temps = temp.getTemps(timeMinutes);
@@ -93,6 +96,14 @@ export function init(canvasEl, viewport) {
 
     const soilHeat = (temps.soil - 10) / 15;
     underground.soilGlow.intensity = Math.max(0, soilHeat) * 1.5;
+
+    if (compassRing) {
+      const cam = core.camera.position;
+      const tgt = core.controls.target;
+      const azimuth = Math.atan2(cam.x - tgt.x, cam.z - tgt.z);
+      const deg = (Math.PI - azimuth) * (180 / Math.PI);
+      compassRing.style.transform = `rotate(${deg}deg)`;
+    }
   });
 
   // Initial UI

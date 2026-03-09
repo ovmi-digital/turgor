@@ -14,6 +14,9 @@ export function createUnderground(scene, { floors = [] } = {}) {
   const hl = GH.l / 2;
   const EPS = 0.003;
 
+  const geometries = [];
+  const materials = [];
+
   const pipeMat = new THREE.MeshStandardMaterial({ color: 0x555555, roughness: 0.6 });
   const gravelMat = new THREE.MeshStandardMaterial({ color: 0xbbbbaa, roughness: 0.85 });
   const soilMat = new THREE.MeshStandardMaterial({ color: 0x6b4423, roughness: 0.9 });
@@ -22,6 +25,10 @@ export function createUnderground(scene, { floors = [] } = {}) {
   const drainGravelMat = new THREE.MeshStandardMaterial({ color: 0x999988, roughness: 0.85 });
   const plywoodMat = new THREE.MeshStandardMaterial({ color: 0xc9a96e, roughness: 0.7 });
   const pvcMat = new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: 0.4 });
+  materials.push(
+    pipeMat, gravelMat, soilMat, deepSoilMat,
+    pipeBedMat, drainGravelMat, plywoodMat, pvcMat,
+  );
 
   const undergroundGroup = new THREE.Group();
   scene.add(undergroundGroup);
@@ -55,6 +62,7 @@ export function createUnderground(scene, { floors = [] } = {}) {
     color: 0x5a3a1a, roughness: 0.9, side: THREE.DoubleSide,
     polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1,
   });
+  materials.push(crossMat);
 
   // Internal cut faces (where the soil was "sliced")
   const crossFront = new THREE.Mesh(new THREE.PlaneGeometry(hw, 1.80), crossMat);
@@ -69,6 +77,7 @@ export function createUnderground(scene, { floors = [] } = {}) {
   const outerWallMat = new THREE.MeshStandardMaterial({
     color: 0x4a2f15, roughness: 0.95, side: THREE.DoubleSide,
   });
+  materials.push(outerWallMat);
   const southWall = new THREE.Mesh(new THREE.PlaneGeometry(hw, 1.80), outerWallMat);
   southWall.position.set(-hw / 2, -0.9, -hl + EPS);
   undergroundGroup.add(southWall);
@@ -159,6 +168,13 @@ export function createUnderground(scene, { floors = [] } = {}) {
   solidCover.visible = false;
   for (const f of floors) f.visible = false;
 
+  function disposeGroup(group) {
+    group.traverse((obj) => {
+      if (obj.geometry) obj.geometry.dispose();
+    });
+    scene.remove(group);
+  }
+
   return {
     riserCaps,
     soilGlow,
@@ -168,6 +184,15 @@ export function createUnderground(scene, { floors = [] } = {}) {
       undergroundGroup.visible = showCutaway;
       for (const f of floors) f.visible = !showCutaway;
       return showCutaway;
+    },
+    dispose() {
+      disposeGroup(undergroundGroup);
+      disposeGroup(solidCover);
+      for (const cap of riserCaps) {
+        if (cap.mesh.geometry) cap.mesh.geometry.dispose();
+        scene.remove(cap.mesh);
+      }
+      for (const m of materials) m.dispose();
     },
   };
 }

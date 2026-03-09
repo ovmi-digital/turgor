@@ -26,7 +26,7 @@ const SKY_FRAGMENT = `
   }
 `;
 
-function createTree(x, z, height, scene) {
+function createTree(x, z, height, group, geometries, materials) {
   const trunkH = height * 0.35;
   const crownH = height * 0.65;
   const trunkR = height * 0.04;
@@ -34,26 +34,31 @@ function createTree(x, z, height, scene) {
 
   const trunkMat = new THREE.MeshStandardMaterial({ color: 0x5C4033, roughness: 0.9 });
   const crownMat = new THREE.MeshStandardMaterial({ color: 0x2D5A27, roughness: 0.8 });
+  materials.push(trunkMat, crownMat);
 
-  const trunk = new THREE.Mesh(
-    new THREE.CylinderGeometry(trunkR, trunkR * 1.3, trunkH, 5),
-    trunkMat
-  );
+  const trunkGeo = new THREE.CylinderGeometry(trunkR, trunkR * 1.3, trunkH, 5);
+  const crownGeo = new THREE.ConeGeometry(crownR, crownH, 6);
+  geometries.push(trunkGeo, crownGeo);
+
+  const trunk = new THREE.Mesh(trunkGeo, trunkMat);
   trunk.position.set(x, trunkH / 2, z);
   trunk.castShadow = false;
-  scene.add(trunk);
+  group.add(trunk);
 
-  const crown = new THREE.Mesh(
-    new THREE.ConeGeometry(crownR, crownH, 6),
-    crownMat
-  );
+  const crown = new THREE.Mesh(crownGeo, crownMat);
   crown.position.set(x, trunkH + crownH / 2, z);
   crown.castShadow = false;
-  scene.add(crown);
+  group.add(crown);
 }
 
 export function createEnvironment(scene) {
+  const geometries = [];
+  const materials = [];
+  const envGroup = new THREE.Group();
+  scene.add(envGroup);
+
   const skyGeo = new THREE.SphereGeometry(45, 16, 8);
+  geometries.push(skyGeo);
   const skyMat = new THREE.ShaderMaterial({
     vertexShader: SKY_VERTEX,
     fragmentShader: SKY_FRAGMENT,
@@ -64,10 +69,12 @@ export function createEnvironment(scene) {
     side: THREE.BackSide,
     depthWrite: false,
   });
+  materials.push(skyMat);
   const sky = new THREE.Mesh(skyGeo, skyMat);
-  scene.add(sky);
+  envGroup.add(sky);
 
   const groundMat = new THREE.MeshStandardMaterial({ color: 0x4A7C59, roughness: 0.95 });
+  materials.push(groundMat);
   const hw = GH.w / 2;
   const hl = GH.l / 2;
   const groundShape = new THREE.Shape();
@@ -84,15 +91,16 @@ export function createEnvironment(scene) {
   hole.closePath();
   groundShape.holes.push(hole);
   const groundGeo = new THREE.ShapeGeometry(groundShape);
+  geometries.push(groundGeo);
   groundGeo.rotateX(-Math.PI / 2);
   const ground = new THREE.Mesh(groundGeo, groundMat);
   ground.position.y = -0.01;
   ground.receiveShadow = true;
-  scene.add(ground);
+  envGroup.add(ground);
 
-  createTree(-6, -4, 3.5, scene);
-  createTree(7, 5, 2.8, scene);
-  createTree(-5, 7, 4.0, scene);
+  createTree(-6, -4, 3.5, envGroup, geometries, materials);
+  createTree(7, 5, 2.8, envGroup, geometries, materials);
+  createTree(-5, 7, 4.0, envGroup, geometries, materials);
 
   const sunLight = new THREE.DirectionalLight(0xFFF4E0, 2.0);
   sunLight.position.set(4, 8, -3);
@@ -105,14 +113,15 @@ export function createEnvironment(scene) {
   sunLight.shadow.camera.right = 6;
   sunLight.shadow.camera.top = 6;
   sunLight.shadow.camera.bottom = -6;
-  scene.add(sunLight);
+  envGroup.add(sunLight);
 
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-  scene.add(ambientLight);
+  envGroup.add(ambientLight);
   const hemiLight = new THREE.HemisphereLight(0xE8F4FD, 0x78552B, 0.3);
-  scene.add(hemiLight);
+  envGroup.add(hemiLight);
 
   const starsGeo = new THREE.BufferGeometry();
+  geometries.push(starsGeo);
   const starPositions = new Float32Array(200 * 3);
   for (let i = 0; i < 200; i++) {
     const theta = Math.random() * Math.PI * 2;
@@ -124,8 +133,9 @@ export function createEnvironment(scene) {
   }
   starsGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
   const starsMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.15, transparent: true, opacity: 0 });
+  materials.push(starsMat);
   const stars = new THREE.Points(starsGeo, starsMat);
-  scene.add(stars);
+  envGroup.add(stars);
 
   const daySunColor = new THREE.Color(0xFFF4E0);
   const nightSunColor = new THREE.Color(0xC4D4FF);
@@ -164,6 +174,13 @@ export function createEnvironment(scene) {
     setDayNight(isDay) {
       transitioning = true;
       transitionTarget = isDay ? 1 : 0;
+    },
+
+    dispose() {
+      for (const g of geometries) g.dispose();
+      for (const m of materials) m.dispose();
+      sunLight.shadow.map?.dispose();
+      scene.remove(envGroup);
     },
   };
 }

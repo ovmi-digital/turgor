@@ -67,6 +67,11 @@ export function createParticles(scene) {
   const tempColor = new THREE.Color();
 
   return {
+    dispose() {
+      geo.dispose();
+      mat.dispose();
+      scene.remove(points);
+    },
     update(dt, isDay, fanOn) {
       const direction = isDay ? 1 : -1;
       const speed = fanOn ? 1.0 : 0.4;

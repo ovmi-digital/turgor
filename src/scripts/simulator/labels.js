@@ -54,5 +54,10 @@ export function createLabels(viewport, camera, container) {
       if (v) hiddenGroups.delete(group);
       else hiddenGroups.add(group);
     },
+
+    destroy() {
+      for (const l of labels) l.el.remove();
+      labels.length = 0;
+    },
   };
 }

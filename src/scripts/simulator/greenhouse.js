@@ -41,12 +41,14 @@ export function createGreenhouse(scene) {
   const hl = GH.l / 2;
   const wh = GH.wallH;
   const ph = GH.peakH;
+  const materials = [];
   const glassMat = new THREE.MeshPhysicalMaterial({
     color: 0xffffff, transparent: true, opacity: 0.15,
     roughness: 0.05, metalness: 0, side: THREE.DoubleSide, depthWrite: false,
   });
   const frameMat = new THREE.MeshStandardMaterial({ color: 0x808080, metalness: 0.85, roughness: 0.25 });
   const floorMat = new THREE.MeshStandardMaterial({ color: 0xccccbb, roughness: 0.9 });
+  materials.push(glassMat, frameMat, floorMat);
 
   const ghGroup = new THREE.Group();
   scene.add(ghGroup);
@@ -57,9 +59,11 @@ export function createGreenhouse(scene) {
   floorMesh.receiveShadow = true;
   ghGroup.add(floorMesh);
 
+  const innerFloorMat = new THREE.MeshStandardMaterial({ color: 0xc8c0ae, roughness: 0.95 });
+  materials.push(innerFloorMat);
   const innerFloor = new THREE.Mesh(
     new THREE.PlaneGeometry(GH.w, GH.l),
-    new THREE.MeshStandardMaterial({ color: 0xc8c0ae, roughness: 0.95 })
+    innerFloorMat,
   );
   innerFloor.rotation.x = -Math.PI / 2;
   innerFloor.position.y = 0.005;
@@ -153,5 +157,14 @@ export function createGreenhouse(scene) {
   glassGroup.add(makeRoofPanel(-hw, 0));
   glassGroup.add(makeRoofPanel(hw, 0));
 
-  return { group: ghGroup, frameGroup, glassGroup, floorMesh, innerFloor };
+  return {
+    group: ghGroup, frameGroup, glassGroup, floorMesh, innerFloor,
+    dispose() {
+      ghGroup.traverse((obj) => {
+        if (obj.geometry) obj.geometry.dispose();
+      });
+      for (const m of materials) m.dispose();
+      scene.remove(ghGroup);
+    },
+  };
 }

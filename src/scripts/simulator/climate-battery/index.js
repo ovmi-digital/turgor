@@ -46,28 +46,36 @@ export function init(canvasEl, viewport) {
   let isDay = false;
   let timeMinutes = 0;
 
-  // Raycasting
+  // Raycasting — cache interactive meshes, rebuild on scene changes
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   let hoveredObject = null;
+  let cachedMeshes = null;
 
-  canvasEl.addEventListener('pointermove', (e) => {
+  function rebuildMeshCache() {
+    cachedMeshes = [];
+    core.scene.traverse((obj) => {
+      if (obj.isMesh && obj.userData.type) cachedMeshes.push(obj);
+    });
+  }
+
+  function onPointerMove(e) {
     const rect = canvasEl.getBoundingClientRect();
     mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(mouse, core.camera);
-    const meshes = [];
-    core.scene.traverse((obj) => { if (obj.isMesh && obj.userData.type) meshes.push(obj); });
-    const intersects = raycaster.intersectObjects(meshes);
+    if (!cachedMeshes) rebuildMeshCache();
+    const intersects = raycaster.intersectObjects(cachedMeshes);
     hoveredObject = null;
     canvasEl.style.cursor = 'grab';
     if (intersects.length > 0) {
       hoveredObject = intersects[0].object;
       canvasEl.style.cursor = 'pointer';
     }
-  });
+  }
+  canvasEl.addEventListener('pointermove', onPointerMove);
 
-  canvasEl.addEventListener('click', () => {
+  function onClick() {
     if (!hoveredObject || !hoveredObject.userData.type) return;
     const typeMap = {
       pipe: 'detail-pipes', manifold: 'detail-manifold', fan: 'detail-fan',
@@ -81,7 +89,8 @@ export function init(canvasEl, viewport) {
         detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     }
-  });
+  }
+  canvasEl.addEventListener('click', onClick);
 
   // Compass HUD
   const compassRing = document.getElementById('compass-ring');
@@ -139,6 +148,7 @@ export function init(canvasEl, viewport) {
     getIsDay() { return isDay; },
     toggleCutaway() {
       const showing = underground.toggleCutaway();
+      cachedMeshes = null;
       labels.setGroupVisible('underground', showing);
       return showing;
     },
@@ -151,5 +161,18 @@ export function init(canvasEl, viewport) {
     onTick(cb) { externalTicks.push(cb); },
     toggleLabels() { return labels.toggle(); },
     resetCamera() { core.resetCamera(); },
+    destroy() {
+      canvasEl.removeEventListener('pointermove', onPointerMove);
+      canvasEl.removeEventListener('click', onClick);
+      components.dispose();
+      particles.dispose();
+      underground.dispose();
+      gh.dispose();
+      env.dispose();
+      labels.destroy();
+      core.destroy();
+      cachedMeshes = null;
+      externalTicks.length = 0;
+    },
   };
 }

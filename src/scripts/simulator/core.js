@@ -41,9 +41,12 @@ export function createCore(canvas, viewport) {
 
   const tickCallbacks = [];
   let prevTime = performance.now();
+  let animationId = null;
+  let destroyed = false;
 
   function animate() {
-    requestAnimationFrame(animate);
+    if (destroyed) return;
+    animationId = requestAnimationFrame(animate);
     const now = performance.now();
     const dt = Math.min((now - prevTime) / 1000, 0.1);
     prevTime = now;
@@ -60,7 +63,8 @@ export function createCore(canvas, viewport) {
     renderer.setSize(w, h);
   }
   window.addEventListener('resize', onResize);
-  new ResizeObserver(onResize).observe(viewport);
+  const resizeObserver = new ResizeObserver(onResize);
+  resizeObserver.observe(viewport);
 
   return {
     scene,
@@ -75,5 +79,14 @@ export function createCore(canvas, viewport) {
       controls.update();
     },
     start() { animate(); },
+    destroy() {
+      destroyed = true;
+      if (animationId !== null) cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', onResize);
+      resizeObserver.disconnect();
+      controls.dispose();
+      renderer.dispose();
+      tickCallbacks.length = 0;
+    },
   };
 }

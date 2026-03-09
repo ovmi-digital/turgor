@@ -53,6 +53,8 @@ export function createUnderground(scene, { floors = [] } = {}) {
     color: 0x5a3a1a, roughness: 0.9, side: THREE.DoubleSide,
     polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1,
   });
+
+  // Internal cut faces (where the soil was "sliced")
   const crossFront = new THREE.Mesh(new THREE.PlaneGeometry(hw, 1.80), crossMat);
   crossFront.position.set(-hw / 2, -0.9, -EPS);
   undergroundGroup.add(crossFront);
@@ -60,6 +62,24 @@ export function createUnderground(scene, { floors = [] } = {}) {
   crossSide.position.set(-EPS, -0.9, -hl / 2);
   crossSide.rotation.y = Math.PI / 2;
   undergroundGroup.add(crossSide);
+
+  // Outer walls of the pit (prevent seeing through to sky)
+  const outerWallMat = new THREE.MeshStandardMaterial({
+    color: 0x4a2f15, roughness: 0.95, side: THREE.DoubleSide,
+  });
+  const southWall = new THREE.Mesh(new THREE.PlaneGeometry(hw, 1.80), outerWallMat);
+  southWall.position.set(-hw / 2, -0.9, -hl + EPS);
+  undergroundGroup.add(southWall);
+  const westWall = new THREE.Mesh(new THREE.PlaneGeometry(hl, 1.80), outerWallMat);
+  westWall.position.set(-hw + EPS, -0.9, -hl / 2);
+  westWall.rotation.y = Math.PI / 2;
+  undergroundGroup.add(westWall);
+
+  // Pit floor
+  const pitFloor = new THREE.Mesh(new THREE.PlaneGeometry(hw, hl), outerWallMat);
+  pitFloor.rotation.x = -Math.PI / 2;
+  pitFloor.position.set(-hw / 2, -1.80 + EPS, -hl / 2);
+  undergroundGroup.add(pitFloor);
 
   for (const layerY of PIPE_LAYERS) {
     for (const px of PIPE_XS) {

@@ -9,10 +9,10 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
 >
   <article class="mx-auto max-w-2xl px-6 pt-12 md:pt-20">
     <header class="mb-12">
-      <nav class="flex items-center gap-2 text-xs font-bold tracking-[0.15em] uppercase text-white/40 mb-6">
-        <a href="/" class="hover:text-white/80 transition-colors duration-300">Turgor</a>
-        <span>/</span>
-        <a href="/blog" class="hover:text-white/80 transition-colors duration-300">Blog</a>
+      <nav class="flex items-center gap-2 text-xs font-bold tracking-[0.15em] uppercase text-[var(--color-blog-accent)] mb-6">
+        <a href="/" class="hover:text-[var(--color-blog-accent-light)] transition-colors duration-300">Turgor</a>
+        <span class="text-[var(--color-blog-muted)]">/</span>
+        <a href="/blog" class="hover:text-[var(--color-blog-accent-light)] transition-colors duration-300">Blog</a>
       </nav>
       <h1
         class="font-black tracking-tight leading-none"
@@ -22,15 +22,15 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
       </h1>
       <time
         datetime="2026-03-09"
-        class="block mt-4 text-xs font-bold tracking-[0.15em] uppercase text-white/30"
+        class="block mt-4 text-xs font-bold tracking-[0.15em] uppercase text-[var(--color-blog-muted)]"
       >
         March 9, 2026
       </time>
     </header>
 
-    <div class="prose-section space-y-8 text-sm leading-relaxed text-white/70">
+    <div class="prose-section space-y-8 text-sm leading-relaxed text-[var(--color-blog-text)]">
       <section>
-        <h2 class="text-base font-black text-white/90 mb-3">The Problem</h2>
+        <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">The Problem</h2>
         <p>
           Greenhouses trap sunlight during the day. They get hot — sometimes too hot.
           But the moment the sun sets, all that heat escapes through the glass. By morning,
@@ -40,7 +40,7 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
       </section>
 
       <section>
-        <h2 class="text-base font-black text-white/90 mb-3">The Idea</h2>
+        <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">The Idea</h2>
         <p>
           A climate battery stores daytime heat underground and releases it at night.
           The concept is simple: blow warm greenhouse air through pipes buried in the soil.
@@ -50,7 +50,7 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
       </section>
 
       <section>
-        <h2 class="text-base font-black text-white/90 mb-3">How It Works</h2>
+        <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">How It Works</h2>
         <p>
           During the day, a thermostat-controlled fan pulls warm air from the greenhouse peak
           down through a vertical riser into a network of buried corrugated pipes. As air
@@ -61,7 +61,7 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
       </section>
 
       <section>
-        <h2 class="text-base font-black text-white/90 mb-3">Our Design</h2>
+        <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">Our Design</h2>
         <p>
           We designed this for a 4 × 5 meter greenhouse. Eight 110mm corrugated drainage pipes
           run the full length in two layers — four at 80cm depth, four at 120cm. A 12V inline fan
@@ -74,7 +74,7 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
 
   <!-- ═══════════════════════════════════════ SIMULATOR EMBED -->
   <section class="my-12 md:my-20">
-    <div class="max-w-[90vw] mx-auto rounded-lg overflow-hidden border border-white/10"
+    <div class="max-w-[90vw] mx-auto rounded-lg overflow-hidden border border-[var(--color-blog-border)]"
          style="height: 70vh;">
       <div id="app" class="flex flex-col h-full">
 
@@ -84,8 +84,8 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
           <div id="viewport" class="relative lg:w-[65%] h-[60%] lg:h-auto shrink-0">
             <canvas id="canvas"></canvas>
             <div id="webgl-fallback" class="hidden absolute inset-0 flex items-center justify-center p-8"
-                 style="background-color: var(--color-bg);">
-              <p class="text-center max-w-md" style="color: var(--color-muted);">
+                 style="background-color: var(--color-blog-bg);">
+              <p class="text-center max-w-md" style="color: var(--color-blog-muted);">
                 WebGL is not supported in your browser. Please use a modern browser to view the 3D simulation.
               </p>
             </div>
@@ -94,131 +94,131 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
 
           <!-- Info Panel -->
           <aside id="info-panel" class="lg:w-[35%] flex-1 min-h-0 overflow-y-auto p-4 md:p-6 border-t lg:border-t-0 lg:border-l flex flex-col gap-4"
-                 style="border-color: color-mix(in srgb, var(--color-muted) 20%, transparent);">
+                 style="border-color: color-mix(in srgb, var(--color-blog-muted) 20%, transparent);">
 
             <!-- System Overview -->
-            <div class="panel-card rounded-lg p-4" style="background: color-mix(in srgb, var(--color-muted) 8%, transparent);">
-              <h3 class="text-xs font-bold tracking-[0.15em] uppercase mb-3" style="color: var(--color-muted);">System Overview</h3>
+            <div class="panel-card rounded-lg p-4" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
+              <h3 class="text-xs font-bold tracking-[0.15em] uppercase mb-3" style="color: var(--color-blog-muted);">System Overview</h3>
               <p class="text-sm leading-relaxed">
                 4 &times; 5 m greenhouse. 8 &times; 110 mm corrugated pipes in 2 layers at 80 cm and 120 cm depth. 12V solar-powered inline fan. Passive thermal storage in soil mass.
               </p>
             </div>
 
             <!-- Mode Display -->
-            <div id="mode-card" class="panel-card rounded-lg p-4" style="background: color-mix(in srgb, var(--color-muted) 8%, transparent);">
+            <div id="mode-card" class="panel-card rounded-lg p-4" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
               <h3 id="mode-title" class="text-base font-black mb-3">Storing Heat</h3>
               <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <span class="block text-xs font-bold uppercase tracking-wide" style="color: var(--color-muted);">Outside</span>
+                  <span class="block text-xs font-bold uppercase tracking-wide" style="color: var(--color-blog-muted);">Outside</span>
                   <span id="temp-outside" class="text-xl font-black tabular-nums">-5°C</span>
                 </div>
                 <div>
-                  <span class="block text-xs font-bold uppercase tracking-wide" style="color: var(--color-muted);">Greenhouse</span>
+                  <span class="block text-xs font-bold uppercase tracking-wide" style="color: var(--color-blog-muted);">Greenhouse</span>
                   <span id="temp-greenhouse" class="text-xl font-black tabular-nums" style="color: #F59E0B;">30°C</span>
                 </div>
                 <div>
-                  <span class="block text-xs font-bold uppercase tracking-wide" style="color: var(--color-muted);">Soil Temp</span>
+                  <span class="block text-xs font-bold uppercase tracking-wide" style="color: var(--color-blog-muted);">Soil Temp</span>
                   <span id="temp-soil" class="text-xl font-black tabular-nums" style="color: #EF4444;">20°C</span>
                 </div>
                 <div>
-                  <span class="block text-xs font-bold uppercase tracking-wide" style="color: var(--color-muted);">Fan</span>
+                  <span class="block text-xs font-bold uppercase tracking-wide" style="color: var(--color-blog-muted);">Fan</span>
                   <span id="fan-status" class="text-xl font-black">ON</span>
                 </div>
               </div>
             </div>
 
             <!-- Time Display -->
-            <div class="panel-card rounded-lg p-4" style="background: color-mix(in srgb, var(--color-muted) 8%, transparent);">
+            <div class="panel-card rounded-lg p-4" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-bold tracking-[0.15em] uppercase" style="color: var(--color-muted);">Time</span>
+                <span class="text-xs font-bold tracking-[0.15em] uppercase" style="color: var(--color-blog-muted);">Time</span>
                 <span id="time-display" class="text-2xl font-black tabular-nums">12:00</span>
               </div>
             </div>
 
             <!-- Component Details -->
             <div class="flex flex-col gap-2">
-              <h3 class="text-xs font-bold tracking-[0.15em] uppercase mt-2" style="color: var(--color-muted);">Components</h3>
+              <h3 class="text-xs font-bold tracking-[0.15em] uppercase mt-2" style="color: var(--color-blog-muted);">Components</h3>
 
-              <details id="detail-pipes" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-muted) 8%, transparent);">
+              <details id="detail-pipes" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
                 <summary class="p-3 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Pipes</summary>
-                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-muted);">
+                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-blog-muted);">
                   110 mm corrugated drainage pipe. 8 runs in 2 layers (4 per layer). 50 cm spacing, 50 cm from walls. ~40 m total length. Dark gray, UV-resistant.
                 </div>
               </details>
 
-              <details id="detail-manifold" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-muted) 8%, transparent);">
+              <details id="detail-manifold" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
                 <summary class="p-3 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Manifolds</summary>
-                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-muted);">
+                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-blog-muted);">
                   160 mm PVC or plywood box 40 &times; 60 &times; 30 cm. One at each end (north and south). Connects all pipe runs to vertical risers.
                 </div>
               </details>
 
-              <details id="detail-fan" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-muted) 8%, transparent);">
+              <details id="detail-fan" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
                 <summary class="p-3 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Fan</summary>
-                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-muted);">
+                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-blog-muted);">
                   12V inline duct fan. 100–150 m³/h. Gentle airflow is critical — too fast and heat does not transfer to soil. Mounted in Riser A (north).
                 </div>
               </details>
 
-              <details id="detail-solar" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-muted) 8%, transparent);">
+              <details id="detail-solar" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
                 <summary class="p-3 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Solar Panel</summary>
-                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-muted);">
+                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-blog-muted);">
                   50W monocrystalline panel. Mounted on roof. Powers the fan via charge controller and battery. No grid connection needed.
                 </div>
               </details>
 
-              <details id="detail-battery" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-muted) 8%, transparent);">
+              <details id="detail-battery" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
                 <summary class="p-3 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Battery</summary>
-                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-muted);">
+                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-blog-muted);">
                   12V, 20–40 Ah lead-acid or LiFePO4. Provides buffer for cloudy periods. Mounted on north wall, protected from heat.
                 </div>
               </details>
 
-              <details id="detail-thermostat" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-muted) 8%, transparent);">
+              <details id="detail-thermostat" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
                 <summary class="p-3 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Thermostat</summary>
-                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-muted);">
+                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-blog-muted);">
                   Simple bimetal or digital thermostat. ON above 25°C, OFF below 18°C. Mounted on Riser A near fan.
                 </div>
               </details>
 
-              <details id="detail-risers" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-muted) 8%, transparent);">
+              <details id="detail-risers" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
                 <summary class="p-3 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Risers</summary>
-                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-muted);">
+                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-blog-muted);">
                   110 mm PVC vertical pipes. One per end. Riser A (north) has inline fan. Riser B (south) is open passive return.
                 </div>
               </details>
             </div>
 
             <!-- Cost Breakdown -->
-            <details class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-muted) 8%, transparent);">
+            <details class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
               <summary class="p-3 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">
                 Cost Breakdown — 1,500–2,300 RON (~€300–470)
               </summary>
               <div class="px-3 pb-3">
-                <table class="w-full text-xs" style="color: var(--color-muted);">
+                <table class="w-full text-xs" style="color: var(--color-blog-muted);">
                   <tbody>
-                    <tr class="border-b" style="border-color: color-mix(in srgb, var(--color-muted) 15%, transparent);">
+                    <tr class="border-b" style="border-color: color-mix(in srgb, var(--color-blog-muted) 15%, transparent);">
                       <td class="py-1.5">Corrugated pipe (40m)</td><td class="text-right tabular-nums">300–500 RON</td>
                     </tr>
-                    <tr class="border-b" style="border-color: color-mix(in srgb, var(--color-muted) 15%, transparent);">
+                    <tr class="border-b" style="border-color: color-mix(in srgb, var(--color-blog-muted) 15%, transparent);">
                       <td class="py-1.5">PVC fittings &amp; risers</td><td class="text-right tabular-nums">100–150 RON</td>
                     </tr>
-                    <tr class="border-b" style="border-color: color-mix(in srgb, var(--color-muted) 15%, transparent);">
+                    <tr class="border-b" style="border-color: color-mix(in srgb, var(--color-blog-muted) 15%, transparent);">
                       <td class="py-1.5">Inline fan (12V)</td><td class="text-right tabular-nums">80–150 RON</td>
                     </tr>
-                    <tr class="border-b" style="border-color: color-mix(in srgb, var(--color-muted) 15%, transparent);">
+                    <tr class="border-b" style="border-color: color-mix(in srgb, var(--color-blog-muted) 15%, transparent);">
                       <td class="py-1.5">Thermostat</td><td class="text-right tabular-nums">30–60 RON</td>
                     </tr>
-                    <tr class="border-b" style="border-color: color-mix(in srgb, var(--color-muted) 15%, transparent);">
+                    <tr class="border-b" style="border-color: color-mix(in srgb, var(--color-blog-muted) 15%, transparent);">
                       <td class="py-1.5">Solar panel (50W)</td><td class="text-right tabular-nums">200–350 RON</td>
                     </tr>
-                    <tr class="border-b" style="border-color: color-mix(in srgb, var(--color-muted) 15%, transparent);">
+                    <tr class="border-b" style="border-color: color-mix(in srgb, var(--color-blog-muted) 15%, transparent);">
                       <td class="py-1.5">Charge controller</td><td class="text-right tabular-nums">50–100 RON</td>
                     </tr>
-                    <tr class="border-b" style="border-color: color-mix(in srgb, var(--color-muted) 15%, transparent);">
+                    <tr class="border-b" style="border-color: color-mix(in srgb, var(--color-blog-muted) 15%, transparent);">
                       <td class="py-1.5">Battery (12V 20Ah)</td><td class="text-right tabular-nums">150–300 RON</td>
                     </tr>
-                    <tr class="border-b" style="border-color: color-mix(in srgb, var(--color-muted) 15%, transparent);">
+                    <tr class="border-b" style="border-color: color-mix(in srgb, var(--color-blog-muted) 15%, transparent);">
                       <td class="py-1.5">Gravel (cap + drainage)</td><td class="text-right tabular-nums">200–350 RON</td>
                     </tr>
                     <tr>
@@ -233,8 +233,8 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
 
         <!-- ═══════════════════════════════════════ BOTTOM CONTROLS -->
         <footer class="flex flex-wrap items-center gap-2 px-4 md:px-6 py-2 shrink-0 border-t"
-                style="border-color: color-mix(in srgb, var(--color-muted) 20%, transparent);">
-          <div class="flex items-center gap-1 rounded-lg p-1" style="background: color-mix(in srgb, var(--color-muted) 12%, transparent);">
+                style="border-color: color-mix(in srgb, var(--color-blog-muted) 20%, transparent);">
+          <div class="flex items-center gap-1 rounded-lg p-1" style="background: color-mix(in srgb, var(--color-blog-muted) 12%, transparent);">
             <button id="btn-day" class="mode-btn active px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all" aria-label="Day mode">
               Day
             </button>
@@ -243,10 +243,10 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
             </button>
           </div>
           <label class="flex items-center gap-2 flex-1 min-w-0">
-            <span class="text-xs font-bold tracking-wide uppercase shrink-0 hidden sm:inline" style="color: var(--color-muted);">Time</span>
+            <span class="text-xs font-bold tracking-wide uppercase shrink-0 hidden sm:inline" style="color: var(--color-blog-muted);">Time</span>
             <input id="time-slider" type="range" min="0" max="1440" value="720" step="1"
                    class="flex-1 h-1.5 rounded-full appearance-none cursor-pointer"
-                   style="accent-color: var(--color-accent);" />
+                   style="accent-color: var(--color-blog-accent);" />
           </label>
           <div class="flex items-center gap-1.5">
             <button id="btn-cutaway" class="ctrl-btn active px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all" title="Toggle underground cutaway">
@@ -266,9 +266,9 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
 
   <!-- ═══════════════════════════════════════ CLOSING CONTENT -->
   <article class="mx-auto max-w-2xl px-6 pb-12 md:pb-20">
-    <div class="prose-section space-y-8 text-sm leading-relaxed text-white/70">
+    <div class="prose-section space-y-8 text-sm leading-relaxed text-[var(--color-blog-text)]">
       <section>
-        <h2 class="text-base font-black text-white/90 mb-3">What We Learned</h2>
+        <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">What We Learned</h2>
         <p>
           Pipe spacing matters more than pipe count. Too close and the soil between them
           saturates quickly. Too far and you waste thermal mass. 50cm center-to-center at
@@ -282,7 +282,7 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
       </section>
 
       <section>
-        <h2 class="text-base font-black text-white/90 mb-3">What's Next</h2>
+        <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">What's Next</h2>
         <p>
           The climate battery is the first piece of Turgor — an autonomous greenhouse control
           system we are building in the open. Sensors, AI-driven decision making, and
@@ -291,11 +291,11 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
       </section>
     </div>
 
-    <footer class="mt-16 border-t border-white/10 pt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <footer class="mt-16 border-t border-[var(--color-blog-border)] pt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <a
         href="/blog"
-        class="text-xs font-bold tracking-[0.15em] uppercase text-white/40
-               hover:text-white/80 transition-colors duration-300"
+        class="text-xs font-bold tracking-[0.15em] uppercase text-[var(--color-blog-accent)]
+               hover:text-[var(--color-blog-accent-light)] transition-colors duration-300"
       >
         ← Back to blog
       </a>
@@ -303,8 +303,8 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
         href="https://ovmi.digital"
         target="_blank"
         rel="noopener noreferrer"
-        class="text-xs font-bold tracking-[0.2em] uppercase text-white/30
-               hover:text-white/60 transition-colors duration-300"
+        class="text-xs font-bold tracking-[0.2em] uppercase text-[var(--color-blog-muted)]
+               hover:text-[var(--color-blog-accent)] transition-colors duration-300"
       >
         An Ovmi project
       </a>
@@ -316,36 +316,36 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
 
     .mode-btn {
       background: transparent;
-      color: var(--color-muted);
+      color: var(--color-blog-muted);
       border: none;
       cursor: pointer;
     }
     .mode-btn.active {
-      background: var(--color-text);
-      color: var(--color-bg);
+      background: var(--color-blog-text);
+      color: var(--color-blog-bg);
     }
 
     .ctrl-btn {
       background: transparent;
-      color: var(--color-muted);
-      border: 1px solid color-mix(in srgb, var(--color-muted) 25%, transparent);
+      color: var(--color-blog-muted);
+      border: 1px solid color-mix(in srgb, var(--color-blog-muted) 25%, transparent);
       cursor: pointer;
     }
     .ctrl-btn.active {
-      background: var(--color-text);
-      color: var(--color-bg);
-      border-color: var(--color-text);
+      background: var(--color-blog-text);
+      color: var(--color-blog-bg);
+      border-color: var(--color-blog-text);
     }
     .ctrl-btn:hover { opacity: 0.7; }
 
     input[type="range"] {
-      background: color-mix(in srgb, var(--color-muted) 25%, transparent);
+      background: color-mix(in srgb, var(--color-blog-muted) 25%, transparent);
     }
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
       width: 14px; height: 14px;
       border-radius: 50%;
-      background: var(--color-text);
+      background: var(--color-blog-text);
       cursor: pointer;
     }
 
@@ -1086,7 +1086,7 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
       document.getElementById('temp-greenhouse').textContent = Math.round(temps.greenhouse) + '°C';
       document.getElementById('temp-soil').textContent = Math.round(temps.soil) + '°C';
       document.getElementById('fan-status').textContent = temps.fanOn ? 'ON' : 'OFF';
-      document.getElementById('fan-status').style.color = temps.fanOn ? '#10B981' : 'var(--color-muted)';
+      document.getElementById('fan-status').style.color = temps.fanOn ? '#10B981' : 'var(--color-blog-muted)';
 
       const isSunUp = timeMinutes >= 360 && timeMinutes <= 1080;
       document.getElementById('mode-title').textContent = isSunUp ? 'Storing Heat' : 'Releasing Heat';

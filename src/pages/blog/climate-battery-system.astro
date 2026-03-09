@@ -78,107 +78,57 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
          style="height: 70vh;">
       <div id="app" class="flex flex-col h-full">
 
-        <main class="flex flex-col lg:flex-row flex-1 min-h-0">
-
-          <!-- 3D Viewport -->
-          <div id="viewport" class="relative lg:w-[65%] h-[60%] lg:h-auto shrink-0">
-            <canvas id="canvas"></canvas>
-            <div id="webgl-fallback" class="hidden absolute inset-0 flex items-center justify-center p-8"
-                 style="background-color: var(--color-blog-bg);">
-              <p class="text-center max-w-md" style="color: var(--color-blog-muted);">
-                WebGL is not supported in your browser. Please use a modern browser to view the 3D simulation.
-              </p>
-            </div>
-            <div id="labels-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
-            <!-- Stats HUD -->
-            <div id="hud-stats" class="absolute bottom-3 left-3 pointer-events-none">
-              <div class="hud-panel">
-                <div class="flex items-center gap-3">
-                  <span id="mode-title" class="text-xs font-black uppercase tracking-wider">Storing Heat</span>
-                  <span class="hud-sep">·</span>
-                  <span id="time-display" class="text-sm font-black tabular-nums">12:00</span>
-                </div>
-                <div class="flex gap-4 mt-1.5">
-                  <div>
-                    <span class="hud-label">Outside</span>
-                    <span id="temp-outside" class="hud-value">-5°C</span>
-                  </div>
-                  <div>
-                    <span class="hud-label">Greenhouse</span>
-                    <span id="temp-greenhouse" class="hud-value" style="color:#F59E0B;">30°C</span>
-                  </div>
-                  <div>
-                    <span class="hud-label">Soil</span>
-                    <span id="temp-soil" class="hud-value" style="color:#EF4444;">20°C</span>
-                  </div>
-                  <div>
-                    <span class="hud-label">Fan</span>
-                    <span id="fan-status" class="hud-value">ON</span>
-                  </div>
-                </div>
+        <!-- 3D Viewport (full width) -->
+        <div id="viewport" class="relative flex-1 min-h-0">
+          <canvas id="canvas"></canvas>
+          <div id="webgl-fallback" class="hidden absolute inset-0 flex items-center justify-center p-8"
+               style="background-color: var(--color-blog-bg);">
+            <p class="text-center max-w-md" style="color: var(--color-blog-muted);">
+              WebGL is not supported in your browser. Please use a modern browser to view the 3D simulation.
+            </p>
+          </div>
+          <div id="labels-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+          <!-- Stats HUD -->
+          <div id="hud-stats" class="absolute bottom-3 left-3 pointer-events-none">
+            <div class="hud-panel">
+              <div class="flex items-center gap-3">
+                <span id="mode-title" class="text-xs font-black uppercase tracking-wider">Storing Heat</span>
+                <span class="hud-sep">·</span>
+                <span id="time-display" class="text-sm font-black tabular-nums">12:00</span>
               </div>
-            </div>
-            <!-- Compass HUD -->
-            <div id="compass" class="absolute top-3 right-3 pointer-events-none" style="width:56px;height:56px;">
-              <div id="compass-ring" style="width:100%;height:100%;position:relative;">
-                <svg viewBox="0 0 56 56" style="width:100%;height:100%;">
-                  <circle cx="28" cy="28" r="26" fill="rgba(0,0,0,0.35)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
-                </svg>
-                <span class="compass-dir" style="top:2px;left:50%;transform:translateX(-50%);" id="compass-n">N</span>
-                <span class="compass-dir" style="bottom:2px;left:50%;transform:translateX(-50%);" id="compass-s">S</span>
-                <span class="compass-dir" style="left:3px;top:50%;transform:translateY(-50%);" id="compass-w">W</span>
-                <span class="compass-dir" style="right:3px;top:50%;transform:translateY(-50%);" id="compass-e">E</span>
+              <div class="flex gap-4 mt-1.5">
+                <div>
+                  <span class="hud-label">Outside</span>
+                  <span id="temp-outside" class="hud-value">-5°C</span>
+                </div>
+                <div>
+                  <span class="hud-label">Greenhouse</span>
+                  <span id="temp-greenhouse" class="hud-value" style="color:#F59E0B;">30°C</span>
+                </div>
+                <div>
+                  <span class="hud-label">Soil</span>
+                  <span id="temp-soil" class="hud-value" style="color:#EF4444;">20°C</span>
+                </div>
+                <div>
+                  <span class="hud-label">Fan</span>
+                  <span id="fan-status" class="hud-value">ON</span>
+                </div>
               </div>
             </div>
           </div>
-
-          <!-- Info Panel -->
-          <aside id="info-panel" class="lg:w-[35%] flex-1 min-h-0 overflow-y-auto p-4 md:p-6 border-t lg:border-t-0 lg:border-l flex flex-col gap-4"
-                 style="border-color: color-mix(in srgb, var(--color-blog-muted) 20%, transparent);">
-
-            <!-- System Overview -->
-            <div class="panel-card rounded-lg p-4" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
-              <h3 class="text-xs font-bold tracking-[0.15em] uppercase mb-3" style="color: var(--color-blog-muted);">System Overview</h3>
-              <p class="text-sm leading-relaxed">
-                4 &times; 5 m greenhouse. 8 &times; 110 mm corrugated pipes in 2 layers at 80 cm and 120 cm depth. 12V solar-powered inline fan. Passive thermal storage in soil mass.
-              </p>
+          <!-- Compass HUD -->
+          <div id="compass" class="absolute top-3 right-3 pointer-events-none" style="width:56px;height:56px;">
+            <div id="compass-ring" style="width:100%;height:100%;position:relative;">
+              <svg viewBox="0 0 56 56" style="width:100%;height:100%;position:absolute;top:0;left:0;">
+                <circle cx="28" cy="28" r="26" fill="rgba(0,0,0,0.35)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+              </svg>
+              <span class="compass-dir" style="top:2px;left:50%;transform:translateX(-50%);" id="compass-n">N</span>
+              <span class="compass-dir" style="bottom:2px;left:50%;transform:translateX(-50%);" id="compass-s">S</span>
+              <span class="compass-dir" style="left:3px;top:50%;transform:translateY(-50%);" id="compass-w">W</span>
+              <span class="compass-dir" style="right:3px;top:50%;transform:translateY(-50%);" id="compass-e">E</span>
             </div>
-
-            <!-- Component Details -->
-            <div class="flex flex-col gap-2">
-              <h3 class="text-xs font-bold tracking-[0.15em] uppercase mt-2" style="color: var(--color-blog-muted);">Components</h3>
-
-              <details id="detail-pipes" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
-                <summary class="p-3 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Pipes</summary>
-                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-blog-muted);">
-                  110 mm corrugated drainage pipe. 8 runs in 2 layers (4 per layer). 50 cm spacing, 50 cm from walls. ~40 m total length. Dark gray, UV-resistant.
-                </div>
-              </details>
-
-              <details id="detail-manifold" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
-                <summary class="p-3 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Manifolds</summary>
-                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-blog-muted);">
-                  160 mm PVC or plywood box 40 &times; 60 &times; 30 cm. One at each end (north and south). Connects all pipe runs to vertical risers.
-                </div>
-              </details>
-
-              <details id="detail-fan" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
-                <summary class="p-3 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Fan</summary>
-                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-blog-muted);">
-                  12V inline duct fan. 100–150 m³/h. Gentle airflow is critical — too fast and heat does not transfer to soil. Mounted in Riser A (north).
-                </div>
-              </details>
-
-              <details id="detail-risers" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
-                <summary class="p-3 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Risers</summary>
-                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-blog-muted);">
-                  110 mm PVC vertical pipes. One per end. Riser A (north) has inline fan. Riser B (south) is open passive return.
-                </div>
-              </details>
-            </div>
-
-          </aside>
-        </main>
+          </div>
+        </div>
 
         <!-- ═══════════════════════════════════════ BOTTOM CONTROLS -->
         <footer class="flex flex-wrap items-center gap-2 px-4 md:px-6 py-2 shrink-0 border-t"
@@ -215,6 +165,45 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
   <!-- ═══════════════════════════════════════ CLOSING CONTENT -->
   <article class="mx-auto max-w-2xl px-6 pb-12 md:pb-20">
     <div class="prose-section space-y-8 text-sm leading-relaxed text-[var(--color-blog-text)]">
+
+      <section>
+        <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">System Specs</h2>
+        <p>
+          4 &times; 5 m greenhouse. 8 &times; 110 mm corrugated pipes in 2 layers at 80 cm and 120 cm depth.
+          12V solar-powered inline fan. Passive thermal storage in soil mass.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">Components</h2>
+        <div class="flex flex-col gap-2">
+          <details id="detail-pipes">
+            <summary class="text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Pipes</summary>
+            <p class="mt-1" style="color: var(--color-blog-muted);">
+              110 mm corrugated drainage pipe. 8 runs in 2 layers (4 per layer). 50 cm spacing, 50 cm from walls. ~40 m total length.
+            </p>
+          </details>
+          <details id="detail-manifold">
+            <summary class="text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Manifolds</summary>
+            <p class="mt-1" style="color: var(--color-blog-muted);">
+              Plywood collector box at each end (north and south). Connects all pipe runs to vertical risers.
+            </p>
+          </details>
+          <details id="detail-fan">
+            <summary class="text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Fan</summary>
+            <p class="mt-1" style="color: var(--color-blog-muted);">
+              12V inline duct fan. 100–150 m³/h. Gentle airflow is critical — too fast and heat does not transfer to soil.
+            </p>
+          </details>
+          <details id="detail-risers">
+            <summary class="text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Risers</summary>
+            <p class="mt-1" style="color: var(--color-blog-muted);">
+              110 mm PVC vertical pipes. One per end. Riser A (north) is passive return. Riser B (south) has the inline fan.
+            </p>
+          </details>
+        </div>
+      </section>
+
       <section>
         <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">What We Learned</h2>
         <p>

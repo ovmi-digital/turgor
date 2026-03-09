@@ -1,0 +1,332 @@
+---
+import BlogLayout from "../../layouts/BlogLayout.astro";
+---
+
+<BlogLayout
+  title="The Climate Battery — Turgor"
+  description="Designing an underground thermal storage system for a 4×5m greenhouse — pipes, gravel beds, manifolds, and a solar-powered fan. No grid, no fuel."
+  canonicalPath="/blog/climate-battery-system"
+>
+  <article class="mx-auto max-w-2xl px-6 pt-12 md:pt-20">
+    <header class="mb-12">
+      <nav class="flex items-center gap-2 text-xs font-bold tracking-[0.15em] uppercase text-[var(--color-blog-accent)] mb-6">
+        <a href="/" class="hover:text-[var(--color-blog-accent-light)] transition-colors duration-300">Turgor</a>
+        <span class="text-[var(--color-blog-muted)]">/</span>
+        <a href="/blog" class="hover:text-[var(--color-blog-accent-light)] transition-colors duration-300">Blog</a>
+      </nav>
+      <h1
+        class="font-black tracking-tight leading-none"
+        style="font-size: clamp(2rem, 5vw, 3.5rem);"
+      >
+        The Climate Battery
+      </h1>
+      <time
+        datetime="2026-03-09"
+        class="block mt-4 text-xs font-bold tracking-[0.15em] uppercase text-[var(--color-blog-muted)]"
+      >
+        March 9, 2026
+      </time>
+    </header>
+
+    <div class="prose-section space-y-8 text-sm leading-relaxed text-[var(--color-blog-text)]">
+      <section>
+        <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">The Problem</h2>
+        <p>
+          Greenhouses trap sunlight during the day. They get hot — sometimes too hot.
+          But the moment the sun sets, all that heat escapes through the glass. By morning,
+          the temperature inside can be barely above freezing. You either burn propane,
+          run electric heaters, or accept dead seedlings after the first hard frost.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">The Idea</h2>
+        <p>
+          A climate battery stores daytime heat underground and releases it at night.
+          The concept is simple: blow warm greenhouse air through pipes buried in the soil.
+          The soil absorbs the heat. When temperatures drop, the thermal mass radiates warmth
+          back up. No fuel, no grid power, no moving parts beyond a single fan.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">How It Works</h2>
+        <p>
+          During the day, a thermostat-controlled fan pulls warm air from the greenhouse peak
+          down through a vertical riser into a network of buried corrugated pipes. As air
+          travels through the pipes, it transfers heat to the surrounding soil. The cooled air
+          returns through a second riser on the opposite end. At night, the process reverses —
+          the warm soil heats the cool air passing through.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">Our Design</h2>
+        <p>
+          We designed this for a 4 × 5 meter greenhouse. Eight 110mm corrugated drainage pipes
+          run the full length in two layers — four at 80cm depth, four at 120cm. Each pipe sits
+          in a gravel bed — 15cm of clean 20mm gravel surrounding the pipe on all sides. The gravel
+          prevents soil from clogging the corrugations and ensures condensation drains freely
+          instead of pooling. A 12V inline fan mounted in the south riser moves air at roughly
+          100–150 m³/h. The whole system runs off a 50W solar panel and a small battery.
+          No grid connection.
+        </p>
+      </section>
+    </div>
+  </article>
+
+  <!-- ═══════════════════════════════════════ SIMULATOR EMBED -->
+  <section class="my-12 md:my-20">
+    <div class="max-w-[90vw] mx-auto rounded-lg overflow-hidden border border-[var(--color-blog-border)]"
+         style="height: 70vh;">
+      <div id="app" class="flex flex-col h-full">
+
+        <!-- 3D Viewport (full width) -->
+        <div id="viewport" class="relative flex-1 min-h-0">
+          <canvas id="canvas"></canvas>
+          <div id="webgl-fallback" class="hidden absolute inset-0 flex items-center justify-center p-8"
+               style="background-color: var(--color-blog-bg);">
+            <p class="text-center max-w-md" style="color: var(--color-blog-muted);">
+              WebGL is not supported in your browser. Please use a modern browser to view the 3D simulation.
+            </p>
+          </div>
+          <div id="labels-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+          <!-- Stats HUD -->
+          <div id="hud-stats" class="absolute bottom-3 left-3 pointer-events-none">
+            <div class="hud-panel">
+              <div class="flex items-center gap-3">
+                <span id="mode-title" class="text-xs font-black uppercase tracking-wider">Storing Heat</span>
+                <span class="hud-sep">·</span>
+                <span id="time-display" class="text-sm font-black tabular-nums">12:00</span>
+              </div>
+              <div class="flex gap-4 mt-1.5">
+                <div>
+                  <span class="hud-label">Outside</span>
+                  <span id="temp-outside" class="hud-value">-5°C</span>
+                </div>
+                <div>
+                  <span class="hud-label">Greenhouse</span>
+                  <span id="temp-greenhouse" class="hud-value" style="color:#F59E0B;">30°C</span>
+                </div>
+                <div>
+                  <span class="hud-label">Soil</span>
+                  <span id="temp-soil" class="hud-value" style="color:#EF4444;">20°C</span>
+                </div>
+                <div>
+                  <span class="hud-label">Fan</span>
+                  <span id="fan-status" class="hud-value">ON</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Compass HUD -->
+          <div id="compass" class="absolute top-3 right-3 pointer-events-none" style="width:56px;height:56px;">
+            <div id="compass-ring" style="width:100%;height:100%;position:relative;">
+              <svg viewBox="0 0 56 56" style="width:100%;height:100%;position:absolute;top:0;left:0;">
+                <circle cx="28" cy="28" r="26" fill="rgba(0,0,0,0.35)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+              </svg>
+              <span class="compass-dir" style="top:2px;left:50%;transform:translateX(-50%);" id="compass-n">N</span>
+              <span class="compass-dir" style="bottom:2px;left:50%;transform:translateX(-50%);" id="compass-s">S</span>
+              <span class="compass-dir" style="left:3px;top:50%;transform:translateY(-50%);" id="compass-w">W</span>
+              <span class="compass-dir" style="right:3px;top:50%;transform:translateY(-50%);" id="compass-e">E</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ CLOSING CONTENT -->
+  <article class="mx-auto max-w-2xl px-6 pb-12 md:pb-20">
+    <div class="prose-section space-y-8 text-sm leading-relaxed text-[var(--color-blog-text)]">
+
+      <section>
+        <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">System Specs</h2>
+        <p>
+          4 &times; 5 m greenhouse. 8 &times; 110 mm corrugated pipes in 2 layers at 80 cm and 120 cm depth.
+          Gravel-bedded pipe runs for drainage. 12V solar-powered inline fan. Passive thermal storage in soil mass.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">Components</h2>
+        <div class="flex flex-col gap-2">
+          <details id="detail-pipes">
+            <summary class="text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Pipes</summary>
+            <p class="mt-1" style="color: var(--color-blog-muted);">
+              110 mm corrugated drainage pipe. 8 runs in 2 layers (4 per layer). 50 cm spacing, 50 cm from walls. ~40 m total length.
+              Each pipe bedded in 20 mm clean gravel — prevents soil intrusion and ensures condensation drainage.
+            </p>
+          </details>
+          <details>
+            <summary class="text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Gravel Bed</summary>
+            <p class="mt-1" style="color: var(--color-blog-muted);">
+              20 mm clean gravel, 15 cm thick around each pipe. Prevents soil from clogging corrugations, drains condensation,
+              and improves heat transfer between air and surrounding thermal mass.
+            </p>
+          </details>
+          <details id="detail-manifold">
+            <summary class="text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Manifolds</summary>
+            <p class="mt-1" style="color: var(--color-blog-muted);">
+              Plywood collector box at each end (north and south). Connects all pipe runs to vertical risers.
+            </p>
+          </details>
+          <details id="detail-fan">
+            <summary class="text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Fan</summary>
+            <p class="mt-1" style="color: var(--color-blog-muted);">
+              12V inline duct fan. 100–150 m³/h. Gentle airflow is critical — too fast and heat does not transfer to soil.
+            </p>
+          </details>
+          <details id="detail-risers">
+            <summary class="text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Risers</summary>
+            <p class="mt-1" style="color: var(--color-blog-muted);">
+              110 mm PVC vertical pipes. One per end. Riser A (north) is passive return. Riser B (south) has the inline fan.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">What We Learned</h2>
+        <p>
+          Pipe spacing matters more than pipe count. Too close and the soil between them
+          saturates quickly. Too far and you waste thermal mass. 50cm center-to-center at
+          our scale hits the sweet spot.
+        </p>
+        <p class="mt-3">
+          Airflow speed is counterintuitive — slower is better. The air needs contact time
+          with the pipe walls to transfer heat. A fan that is too powerful pushes warm air
+          straight through without dumping its energy.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">What's Next</h2>
+        <p>
+          The climate battery is the first piece of Turgor — an autonomous greenhouse control
+          system we are building in the open. Sensors, AI-driven decision making, and
+          safety-first automation. Follow the build at turgor.garden.
+        </p>
+      </section>
+    </div>
+
+    <footer class="mt-16 border-t border-[var(--color-blog-border)] pt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <a
+        href="/blog"
+        class="text-xs font-bold tracking-[0.15em] uppercase text-[var(--color-blog-accent)]
+               hover:text-[var(--color-blog-accent-light)] transition-colors duration-300"
+      >
+        ← Back to blog
+      </a>
+      <a
+        href="https://ovmi.digital"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-xs font-bold tracking-[0.2em] uppercase text-[var(--color-blog-muted)]
+               hover:text-[var(--color-blog-accent)] transition-colors duration-300"
+      >
+        An Ovmi project
+      </a>
+    </footer>
+  </article>
+
+  <style is:inline>
+    #canvas { width: 100%; height: 100%; display: block; }
+
+
+    details summary { list-style: none; }
+    details summary::-webkit-details-marker { display: none; }
+    details summary::before { content: '+ '; font-weight: 900; margin-right: 0.25rem; }
+    details[open] summary::before { content: '- '; }
+
+    .hud-panel {
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: rgba(255,255,255,0.9);
+    }
+    .hud-sep { color: rgba(255,255,255,0.3); }
+    .hud-label {
+      font-size: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.45);
+      display: block;
+      line-height: 1;
+    }
+    .hud-value {
+      font-size: 13px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.3;
+    }
+
+    .compass-dir {
+      position: absolute;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.8);
+      line-height: 1;
+    }
+    #compass-n { color: #f87171; }
+
+    .label-3d {
+      position: absolute;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      padding: 2px 6px;
+      border-radius: 3px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+  </style>
+
+  <script>
+    import { init } from '../../scripts/simulator/climate-battery/index.js';
+    import { createControlsHUD } from '../../scripts/simulator/controls-hud.js';
+
+    const canvas = document.getElementById('canvas');
+    const viewport = document.getElementById('viewport');
+    const sim = init(canvas, viewport);
+
+    // Auto-cycle state
+    let playing = true;
+    let speed = 24;
+
+    sim.onTick((dt) => {
+      if (!playing) return;
+      let t = sim.getTime() + dt * speed;
+      if (t >= 1440) t -= 1440;
+      sim.setTime(t);
+    });
+
+    // Controls HUD
+    const hud = createControlsHUD(viewport);
+
+    hud.addPlayPause(true, () => {
+      playing = !playing;
+      return playing;
+    });
+
+    hud.addSpeedGroup(
+      [{ label: '0.5×', value: 12 }, { label: '1×', value: 24 }, { label: '3×', value: 72 }],
+      24,
+      (v) => { speed = v; },
+    );
+
+    hud.addSeparator();
+    hud.addToggle('Cutaway', true, () => sim.toggleCutaway());
+    hud.addToggle('Frame', true, () => sim.toggleGreenhouse());
+    hud.addToggle('Labels', false, () => sim.toggleLabels());
+    hud.addSeparator();
+    hud.addButton('Reset', () => sim.resetCamera());
+  </script>
+</BlogLayout>

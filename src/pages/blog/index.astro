@@ -1,0 +1,94 @@
+---
+import BlogLayout from "../../layouts/BlogLayout.astro";
+
+const articles = [
+  {
+    title: "The Climate Battery",
+    description:
+      "Designing an underground thermal storage system for a 4×5m greenhouse — pipes, gravel beds, manifolds, and a solar-powered fan. No grid, no fuel.",
+    date: "2026-03-09",
+    slug: "climate-battery-system",
+  },
+];
+---
+
+<BlogLayout
+  title="Blog — Turgor"
+  description="Build log and technical articles from Turgor, an autonomous greenhouse project."
+  canonicalPath="/blog"
+>
+  <div class="relative">
+    <div
+      class="absolute inset-x-0 top-0 h-[40vh] bg-cover bg-center"
+      style="background-image: url('/images/blog-hero.webp'); opacity: 0.08;"
+    ></div>
+    <div
+      class="absolute inset-x-0 top-0 h-[40vh]"
+      style="background: linear-gradient(to bottom, transparent 60%, var(--color-blog-bg) 100%);"
+    ></div>
+
+    <div class="relative mx-auto max-w-2xl px-6 py-12 md:py-20">
+      <header class="mb-16">
+        <a
+          href="/"
+          class="text-sm font-bold tracking-[0.2em] uppercase text-[var(--color-blog-accent)]
+                 hover:text-[var(--color-blog-accent-light)] transition-colors duration-300"
+        >
+          Turgor
+        </a>
+        <h1
+          class="mt-4 font-black tracking-tight leading-none"
+          style="font-size: clamp(2rem, 5vw, 3.5rem);"
+        >
+          Blog
+        </h1>
+      </header>
+
+      <ul class="space-y-12">
+        {articles.map((article) => (
+          <li>
+            <a
+              href={`/blog/${article.slug}`}
+              class="group block"
+            >
+              <time
+                datetime={article.date}
+                class="text-xs font-bold tracking-[0.15em] uppercase text-[var(--color-blog-muted)]"
+              >
+                {new Date(article.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </time>
+              <h2
+                class="mt-2 font-black tracking-tight leading-tight
+                       text-[var(--color-blog-text)] group-hover:text-[var(--color-blog-accent)]
+                       transition-colors duration-300"
+                style="font-size: clamp(1.25rem, 3vw, 1.75rem);"
+              >
+                {article.title}
+              </h2>
+              <p class="mt-2 text-sm leading-relaxed text-[var(--color-blog-muted)]
+                        group-hover:text-[var(--color-blog-text)] transition-colors duration-300">
+                {article.description}
+              </p>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <footer class="mt-24 border-t border-[var(--color-blog-border)] pt-8">
+        <a
+          href="https://ovmi.digital"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-xs font-bold tracking-[0.2em] uppercase text-[var(--color-blog-muted)]
+                 hover:text-[var(--color-blog-accent)] transition-colors duration-300"
+        >
+          An Ovmi project
+        </a>
+      </footer>
+    </div>
+  </div>
+</BlogLayout>

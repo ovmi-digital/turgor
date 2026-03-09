@@ -1,0 +1,178 @@
+import * as THREE from 'three';
+import { createCore } from '../core.js';
+import { createEnvironment } from '../environment.js';
+import { createGreenhouse } from '../greenhouse.js';
+import { createLabels } from '../labels.js';
+import { createUnderground, RISER_NORTH_Z, RISER_SOUTH_Z } from './underground.js';
+import { createComponents } from './components.js';
+import { createParticles } from './particles.js';
+import { createTemperatureModel } from './temperature.js';
+
+export function init(canvasEl, viewport) {
+  const core = createCore(canvasEl, viewport);
+  const env = createEnvironment(core.scene);
+  const gh = createGreenhouse(core.scene);
+  const underground = createUnderground(core.scene, {
+    floors: [gh.floorMesh, gh.innerFloor],
+  });
+  const components = createComponents(core.scene);
+  const particles = createParticles(core.scene);
+  const temp = createTemperatureModel();
+
+  const RISER_X = 0;
+
+  // Add riser caps to scene (above ground)
+  for (const cap of underground.riserCaps) {
+    const mesh = cap.mesh;
+    mesh.position.set(...cap.pos);
+    core.scene.add(mesh);
+  }
+
+  // Labels
+  const labelsContainer = document.getElementById('labels-container');
+  const labels = createLabels(viewport, core.camera, labelsContainer);
+  const v = (x, y, z) => new THREE.Vector3(x, y, z);
+  labels.add([
+    { text: 'Riser A', pos: v(RISER_X, 0.65, RISER_NORTH_Z), detail: 'detail-risers' },
+    { text: 'Riser B (Fan)', pos: v(RISER_X, 0.65, RISER_SOUTH_Z), detail: 'detail-fan' },
+    { text: 'Manifold N', pos: v(0, -0.7, RISER_NORTH_Z), detail: 'detail-manifold', group: 'underground' },
+    { text: 'Manifold S', pos: v(0, -0.7, RISER_SOUTH_Z), detail: 'detail-manifold', group: 'underground' },
+    { text: 'Pipe Layer 1', pos: v(-0.5, -0.8, 0), detail: 'detail-pipes', group: 'underground' },
+    { text: 'Pipe Layer 2', pos: v(0.5, -1.2, 0), detail: 'detail-pipes', group: 'underground' },
+  ]);
+  labels.setVisible(false);
+
+  // State
+  let isDay = false;
+  let timeMinutes = 0;
+
+  // Raycasting — cache interactive meshes, rebuild on scene changes
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  let hoveredObject = null;
+  let cachedMeshes = null;
+
+  function rebuildMeshCache() {
+    cachedMeshes = [];
+    core.scene.traverse((obj) => {
+      if (obj.isMesh && obj.userData.type) cachedMeshes.push(obj);
+    });
+  }
+
+  function onPointerMove(e) {
+    const rect = canvasEl.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(mouse, core.camera);
+    if (!cachedMeshes) rebuildMeshCache();
+    const intersects = raycaster.intersectObjects(cachedMeshes);
+    hoveredObject = null;
+    canvasEl.style.cursor = 'grab';
+    if (intersects.length > 0) {
+      hoveredObject = intersects[0].object;
+      canvasEl.style.cursor = 'pointer';
+    }
+  }
+  canvasEl.addEventListener('pointermove', onPointerMove);
+
+  function onClick() {
+    if (!hoveredObject || !hoveredObject.userData.type) return;
+    const typeMap = {
+      pipe: 'detail-pipes', manifold: 'detail-manifold', fan: 'detail-fan',
+      riser: 'detail-risers',
+    };
+    const detailId = typeMap[hoveredObject.userData.type];
+    if (detailId) {
+      const detail = document.getElementById(detailId);
+      if (detail) {
+        detail.open = true;
+        detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  }
+  canvasEl.addEventListener('click', onClick);
+
+  // Compass HUD
+  const compassRing = document.getElementById('compass-ring');
+
+  // External tick hooks (for auto-cycle from page script)
+  const externalTicks = [];
+
+  // Animation tick
+  core.onTick((dt) => {
+    for (const cb of externalTicks) cb(dt);
+
+    const temps = temp.getTemps(timeMinutes);
+    env.update(dt);
+    components.update(dt, temps.fanOn);
+    particles.update(dt, isDay, temps.fanOn);
+    labels.update();
+
+    const soilHeat = (temps.soil - 10) / 15;
+    underground.soilGlow.intensity = Math.max(0, soilHeat) * 1.5;
+
+    if (compassRing) {
+      const cam = core.camera.position;
+      const tgt = core.controls.target;
+      const azimuth = Math.atan2(cam.x - tgt.x, cam.z - tgt.z);
+      const deg = (Math.PI - azimuth) * (180 / Math.PI);
+      compassRing.style.transform = `rotate(${deg}deg)`;
+    }
+  });
+
+  // Initial UI — start at midnight
+  env.setDayNight(false);
+  temp.updateUI(timeMinutes);
+
+  // Start rendering
+  core.start();
+
+  return {
+    setMode(day) {
+      isDay = day;
+      env.setDayNight(day);
+      timeMinutes = day ? 720 : 1320;
+      temp.updateUI(timeMinutes);
+      return timeMinutes;
+    },
+    setTime(minutes) {
+      timeMinutes = minutes;
+      const isSunUp = minutes >= 360 && minutes <= 1080;
+      if (isSunUp !== isDay) {
+        isDay = isSunUp;
+        env.setDayNight(isSunUp);
+      }
+      temp.updateUI(minutes);
+    },
+    getTime() { return timeMinutes; },
+    getIsDay() { return isDay; },
+    toggleCutaway() {
+      const showing = underground.toggleCutaway();
+      cachedMeshes = null;
+      labels.setGroupVisible('underground', showing);
+      return showing;
+    },
+    toggleGreenhouse() {
+      const show = !gh.frameGroup.visible;
+      gh.frameGroup.visible = show;
+      gh.glassGroup.visible = show;
+      return show;
+    },
+    onTick(cb) { externalTicks.push(cb); },
+    toggleLabels() { return labels.toggle(); },
+    resetCamera() { core.resetCamera(); },
+    destroy() {
+      canvasEl.removeEventListener('pointermove', onPointerMove);
+      canvasEl.removeEventListener('click', onClick);
+      components.dispose();
+      particles.dispose();
+      underground.dispose();
+      gh.dispose();
+      env.dispose();
+      labels.destroy();
+      core.destroy();
+      cachedMeshes = null;
+      externalTicks.length = 0;
+    },
+  };
+}

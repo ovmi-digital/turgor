@@ -33,8 +33,8 @@ export function init(canvasEl, viewport) {
   const labels = createLabels(viewport, core.camera, labelsContainer);
   const v = (x, y, z) => new THREE.Vector3(x, y, z);
   labels.add([
-    { text: 'Riser A (Fan)', pos: v(RISER_X, 0.65, RISER_NORTH_Z), detail: 'detail-fan' },
-    { text: 'Riser B', pos: v(RISER_X, 0.65, RISER_SOUTH_Z), detail: 'detail-risers' },
+    { text: 'Riser A', pos: v(RISER_X, 0.65, RISER_NORTH_Z), detail: 'detail-risers' },
+    { text: 'Riser B (Fan)', pos: v(RISER_X, 0.65, RISER_SOUTH_Z), detail: 'detail-fan' },
     { text: 'Manifold N', pos: v(0, -0.7, RISER_NORTH_Z), detail: 'detail-manifold', group: 'underground' },
     { text: 'Manifold S', pos: v(0, -0.7, RISER_SOUTH_Z), detail: 'detail-manifold', group: 'underground' },
     { text: 'Pipe Layer 1', pos: v(-0.5, -0.8, 0), detail: 'detail-pipes', group: 'underground' },
@@ -126,8 +126,10 @@ export function init(canvasEl, viewport) {
       return showing;
     },
     toggleGreenhouse() {
-      gh.frameGroup.visible = !gh.frameGroup.visible;
-      return gh.frameGroup.visible;
+      const show = !gh.frameGroup.visible;
+      gh.frameGroup.visible = show;
+      gh.glassGroup.visible = show;
+      return show;
     },
     toggleLabels() { return labels.toggle(); },
     resetCamera() { core.resetCamera(); },

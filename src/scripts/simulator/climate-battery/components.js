@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { RISER_NORTH_Z } from './underground.js';
+import { RISER_SOUTH_Z } from './underground.js';
 
 const PIPE_R = 0.065;
 const FAN_R = PIPE_R + 0.02;
@@ -8,7 +8,7 @@ const FAN_Y = 0.3 + FAN_H / 2;
 
 export function createComponents(scene) {
   const fanGroup = new THREE.Group();
-  fanGroup.position.set(0, FAN_Y, RISER_NORTH_Z);
+  fanGroup.position.set(0, FAN_Y, RISER_SOUTH_Z);
   scene.add(fanGroup);
 
   const housingMat = new THREE.MeshStandardMaterial({

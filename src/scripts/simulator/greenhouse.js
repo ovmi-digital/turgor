@@ -41,6 +41,11 @@ export function createGreenhouse(scene) {
   const hl = GH.l / 2;
   const wh = GH.wallH;
   const ph = GH.peakH;
+  const roofAngle = Math.atan2(ph - wh, hw);
+  const glassMat = new THREE.MeshPhysicalMaterial({
+    color: 0xffffff, transparent: true, opacity: 0.15,
+    roughness: 0.05, metalness: 0, side: THREE.DoubleSide, depthWrite: false,
+  });
   const frameMat = new THREE.MeshStandardMaterial({ color: 0x808080, metalness: 0.85, roughness: 0.25 });
   const floorMat = new THREE.MeshStandardMaterial({ color: 0xccccbb, roughness: 0.9 });
 
@@ -107,5 +112,47 @@ export function createGreenhouse(scene) {
   addBeam(frameGroup, v(-hw / 2, 0, hl), v(-hw / 2, wh, hl), frameMat, 0.015);
   addBeam(frameGroup, v(hw / 2, 0, hl), v(hw / 2, wh, hl), frameMat, 0.015);
 
-  return { group: ghGroup, frameGroup, floorMesh, innerFloor };
+  // Glass panels
+  const glassGroup = new THREE.Group();
+  ghGroup.add(glassGroup);
+
+  const wallGlass = (w, h, px, py, pz, ry) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), glassMat);
+    m.position.set(px, py, pz);
+    if (ry) m.rotation.y = ry;
+    glassGroup.add(m);
+  };
+  wallGlass(GH.w, wh, 0, wh / 2, -hl, 0);
+  wallGlass(GH.w, wh, 0, wh / 2, hl, Math.PI);
+  wallGlass(GH.l, wh, hw, wh / 2, 0, -Math.PI / 2);
+  wallGlass(GH.l, wh, -hw, wh / 2, 0, Math.PI / 2);
+
+  const gableShape = new THREE.Shape();
+  gableShape.moveTo(-hw, 0);
+  gableShape.lineTo(hw, 0);
+  gableShape.lineTo(0, ph - wh);
+  gableShape.closePath();
+  const gableGeo = new THREE.ShapeGeometry(gableShape);
+  const southGable = new THREE.Mesh(gableGeo, glassMat);
+  southGable.position.set(0, wh, -hl);
+  glassGroup.add(southGable);
+  const northGable = new THREE.Mesh(gableGeo.clone(), glassMat);
+  northGable.position.set(0, wh, hl);
+  northGable.rotation.y = Math.PI;
+  glassGroup.add(northGable);
+
+  const roofSlope = Math.sqrt(hw * hw + (ph - wh) * (ph - wh));
+  const roofGeo = new THREE.PlaneGeometry(roofSlope, GH.l);
+  const westRoof = new THREE.Mesh(roofGeo, glassMat);
+  westRoof.position.set(-hw / 2, (wh + ph) / 2, 0);
+  westRoof.rotation.z = roofAngle;
+  westRoof.rotation.order = 'ZYX';
+  glassGroup.add(westRoof);
+  const eastRoof = new THREE.Mesh(roofGeo.clone(), glassMat);
+  eastRoof.position.set(hw / 2, (wh + ph) / 2, 0);
+  eastRoof.rotation.z = -roofAngle;
+  eastRoof.rotation.order = 'ZYX';
+  glassGroup.add(eastRoof);
+
+  return { group: ghGroup, frameGroup, glassGroup, floorMesh, innerFloor };
 }

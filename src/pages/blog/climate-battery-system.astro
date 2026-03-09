@@ -130,34 +130,6 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
           </div>
         </div>
 
-        <!-- ═══════════════════════════════════════ BOTTOM CONTROLS -->
-        <footer class="flex flex-wrap items-center gap-2 px-4 md:px-6 py-2 shrink-0 border-t"
-                style="border-color: color-mix(in srgb, var(--color-blog-muted) 20%, transparent);">
-          <div class="flex items-center gap-1.5">
-            <button id="btn-playpause" class="ctrl-btn active px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all" title="Play / Pause cycle">
-              ⏸
-            </button>
-            <div class="flex items-center gap-1 rounded-lg p-1" style="background: color-mix(in srgb, var(--color-blog-muted) 12%, transparent);">
-              <button class="speed-btn px-2 py-1 rounded text-xs font-bold tracking-wide transition-all" data-speed="12" aria-label="0.5x speed">0.5×</button>
-              <button class="speed-btn active px-2 py-1 rounded text-xs font-bold tracking-wide transition-all" data-speed="24" aria-label="1x speed">1×</button>
-              <button class="speed-btn px-2 py-1 rounded text-xs font-bold tracking-wide transition-all" data-speed="72" aria-label="3x speed">3×</button>
-            </div>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <button id="btn-cutaway" class="ctrl-btn active px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all" title="Toggle underground cutaway">
-              Cutaway
-            </button>
-            <button id="btn-greenhouse" class="ctrl-btn active px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all" title="Toggle greenhouse frame">
-              Frame
-            </button>
-            <button id="btn-labels" class="ctrl-btn px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all" title="Toggle 3D labels">
-              Labels
-            </button>
-            <button id="btn-reset" class="ctrl-btn px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all" title="Reset camera view">
-              Reset
-            </button>
-          </div>
-        </footer>
       </div>
     </div>
   </section>
@@ -251,18 +223,6 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
   <style is:inline>
     #canvas { width: 100%; height: 100%; display: block; }
 
-    .ctrl-btn {
-      background: transparent;
-      color: var(--color-blog-muted);
-      border: 1px solid color-mix(in srgb, var(--color-blog-muted) 25%, transparent);
-      cursor: pointer;
-    }
-    .ctrl-btn.active {
-      background: var(--color-blog-text);
-      color: var(--color-blog-bg);
-      border-color: var(--color-blog-text);
-    }
-    .ctrl-btn:hover { opacity: 0.7; }
 
     details summary { list-style: none; }
     details summary::-webkit-details-marker { display: none; }
@@ -294,17 +254,6 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
       line-height: 1.3;
     }
 
-    .speed-btn {
-      background: transparent;
-      color: var(--color-blog-muted);
-      border: none;
-      cursor: pointer;
-    }
-    .speed-btn.active {
-      background: var(--color-blog-text);
-      color: var(--color-blog-bg);
-    }
-
     .compass-dir {
       position: absolute;
       font-size: 9px;
@@ -331,6 +280,7 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
 
   <script>
     import { init } from '../../scripts/simulator/climate-battery/index.js';
+    import { createControlsHUD } from '../../scripts/simulator/controls-hud.js';
 
     const canvas = document.getElementById('canvas');
     const viewport = document.getElementById('viewport');
@@ -338,7 +288,7 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
 
     // Auto-cycle state
     let playing = true;
-    let speed = 24; // minutes of sim per real second (24 = full day in 60s)
+    let speed = 24;
 
     sim.onTick((dt) => {
       if (!playing) return;
@@ -347,38 +297,25 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
       sim.setTime(t);
     });
 
-    // Play/Pause
-    const playBtn = document.getElementById('btn-playpause');
-    playBtn.addEventListener('click', () => {
+    // Controls HUD
+    const hud = createControlsHUD(viewport);
+
+    hud.addPlayPause(true, () => {
       playing = !playing;
-      playBtn.textContent = playing ? '⏸' : '▶';
-      playBtn.classList.toggle('active', playing);
+      return playing;
     });
 
-    // Speed buttons
-    document.querySelectorAll('.speed-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        speed = parseInt(btn.dataset.speed);
-        document.querySelectorAll('.speed-btn').forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
+    hud.addSpeedGroup(
+      [{ label: '0.5×', value: 12 }, { label: '1×', value: 24 }, { label: '3×', value: 72 }],
+      24,
+      (v) => { speed = v; },
+    );
 
-    // Toggle buttons
-    document.getElementById('btn-cutaway').addEventListener('click', () => {
-      const active = sim.toggleCutaway();
-      document.getElementById('btn-cutaway').classList.toggle('active', active);
-    });
-    document.getElementById('btn-greenhouse').addEventListener('click', () => {
-      const active = sim.toggleGreenhouse();
-      document.getElementById('btn-greenhouse').classList.toggle('active', active);
-    });
-    document.getElementById('btn-labels').addEventListener('click', () => {
-      const active = sim.toggleLabels();
-      document.getElementById('btn-labels').classList.toggle('active', active);
-    });
-    document.getElementById('btn-reset').addEventListener('click', () => {
-      sim.resetCamera();
-    });
+    hud.addSeparator();
+    hud.addToggle('Cutaway', true, () => sim.toggleCutaway());
+    hud.addToggle('Frame', true, () => sim.toggleGreenhouse());
+    hud.addToggle('Labels', false, () => sim.toggleLabels());
+    hud.addSeparator();
+    hud.addButton('Reset', () => sim.resetCamera());
   </script>
 </BlogLayout>

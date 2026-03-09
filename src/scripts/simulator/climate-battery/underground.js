@@ -101,29 +101,33 @@ export function createUnderground(scene, { floors = [] } = {}) {
   );
   manifoldS.userData = { type: 'manifold' };
 
-  // Pipes with gravel sleeves — terminate at manifold faces
+  // Pipes — terminate at manifold faces
   const pipeLen = Math.abs(manifoldNZ - manifoldSZ) - MANIFOLD_D;
-  const GRAVEL_R = PIPE_RADIUS + 0.10;
   for (const layerY of PIPE_LAYERS) {
     for (const px of PIPE_XS) {
-      // Gravel sleeve (larger cylinder behind the pipe)
-      const sleeveGeo = new THREE.CylinderGeometry(
-        GRAVEL_R, GRAVEL_R, pipeLen, 12,
-      );
-      sleeveGeo.rotateX(Math.PI / 2);
-      const sleeve = new THREE.Mesh(sleeveGeo, pipeBedMat);
-      sleeve.position.set(px, layerY, 0);
-      undergroundGroup.add(sleeve);
-
-      // Pipe
       const pipeGeo = new THREE.CylinderGeometry(
-        PIPE_RADIUS, PIPE_RADIUS, pipeLen + 0.01, 12,
+        PIPE_RADIUS, PIPE_RADIUS, pipeLen, 12,
       );
       pipeGeo.rotateX(Math.PI / 2);
       const pipe = new THREE.Mesh(pipeGeo, pipeMat);
       pipe.position.set(px, layerY, 0);
       pipe.userData = { type: 'pipe' };
       undergroundGroup.add(pipe);
+    }
+  }
+
+  // Gravel rings at cross-section cut face (z=0)
+  const GRAVEL_R = PIPE_RADIUS + 0.12;
+  const RING_LEN = 0.12;
+  for (const layerY of PIPE_LAYERS) {
+    for (const px of PIPE_XS) {
+      const ringGeo = new THREE.CylinderGeometry(
+        GRAVEL_R, GRAVEL_R, RING_LEN, 12,
+      );
+      ringGeo.rotateX(Math.PI / 2);
+      const ring = new THREE.Mesh(ringGeo, pipeBedMat);
+      ring.position.set(px, layerY, RING_LEN / 2 - 0.03);
+      undergroundGroup.add(ring);
     }
   }
 

@@ -1,8 +1,7 @@
 const PANEL_STYLE = [
   'position:absolute',
   'right:12px',
-  'top:50%',
-  'transform:translateY(-50%)',
+  'bottom:12px',
   'display:flex',
   'flex-direction:column',
   'align-items:flex-end',
@@ -40,9 +39,10 @@ const BTN_ON = 'background:rgba(255,255,255,0.85);color:#111;';
 
 const TAB_STYLE = [
   'border:none',
-  'border-radius:8px',
-  'padding:6px 8px',
-  'font-size:13px',
+  'border-radius:10px',
+  'width:36px',
+  'height:36px',
+  'font-size:20px',
   'line-height:1',
   'cursor:pointer',
   'background:rgba(0,0,0,0.5)',
@@ -50,6 +50,9 @@ const TAB_STYLE = [
   '-webkit-backdrop-filter:blur(6px)',
   'color:rgba(255,255,255,0.7)',
   'transition:all 0.15s',
+  'display:flex',
+  'align-items:center',
+  'justify-content:center',
 ].join(';');
 
 const SEP_STYLE = [

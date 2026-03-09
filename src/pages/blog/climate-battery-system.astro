@@ -160,27 +160,6 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
                 </div>
               </details>
 
-              <details id="detail-solar" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
-                <summary class="p-3 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Solar Panel</summary>
-                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-blog-muted);">
-                  50W monocrystalline panel. Mounted on roof. Powers the fan via charge controller and battery. No grid connection needed.
-                </div>
-              </details>
-
-              <details id="detail-battery" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
-                <summary class="p-3 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Battery</summary>
-                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-blog-muted);">
-                  12V, 20–40 Ah lead-acid or LiFePO4. Provides buffer for cloudy periods. Mounted on north wall, protected from heat.
-                </div>
-              </details>
-
-              <details id="detail-thermostat" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
-                <summary class="p-3 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Thermostat</summary>
-                <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-blog-muted);">
-                  Simple bimetal or digital thermostat. ON above 25°C, OFF below 18°C. Mounted on Riser A near fan.
-                </div>
-              </details>
-
               <details id="detail-risers" class="panel-card rounded-lg" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
                 <summary class="p-3 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Risers</summary>
                 <div class="px-3 pb-3 text-sm leading-relaxed" style="color: var(--color-blog-muted);">
@@ -213,7 +192,10 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
             <button id="btn-cutaway" class="ctrl-btn active px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all" title="Toggle underground cutaway">
               Cutaway
             </button>
-            <button id="btn-labels" class="ctrl-btn active px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all" title="Toggle 3D labels">
+            <button id="btn-greenhouse" class="ctrl-btn active px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all" title="Toggle greenhouse frame">
+              Frame
+            </button>
+            <button id="btn-labels" class="ctrl-btn px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all" title="Toggle 3D labels">
               Labels
             </button>
             <button id="btn-reset" class="ctrl-btn px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all" title="Reset camera view">
@@ -363,6 +345,10 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
     document.getElementById('btn-cutaway').addEventListener('click', () => {
       const active = sim.toggleCutaway();
       document.getElementById('btn-cutaway').classList.toggle('active', active);
+    });
+    document.getElementById('btn-greenhouse').addEventListener('click', () => {
+      const active = sim.toggleGreenhouse();
+      document.getElementById('btn-greenhouse').classList.toggle('active', active);
     });
     document.getElementById('btn-labels').addEventListener('click', () => {
       const active = sim.toggleLabels();

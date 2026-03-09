@@ -125,6 +125,10 @@ export function init(canvasEl, viewport) {
       labels.setGroupVisible('underground', showing);
       return showing;
     },
+    toggleGreenhouse() {
+      gh.frameGroup.visible = !gh.frameGroup.visible;
+      return gh.frameGroup.visible;
+    },
     toggleLabels() { return labels.toggle(); },
     resetCamera() { core.resetCamera(); },
   };

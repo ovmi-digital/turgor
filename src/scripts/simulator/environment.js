@@ -97,8 +97,8 @@ export function createEnvironment(scene) {
   const sunLight = new THREE.DirectionalLight(0xFFF4E0, 2.0);
   sunLight.position.set(4, 8, -3);
   sunLight.castShadow = true;
-  sunLight.shadow.mapSize.width = 1024;
-  sunLight.shadow.mapSize.height = 1024;
+  sunLight.shadow.mapSize.width = 2048;
+  sunLight.shadow.mapSize.height = 2048;
   sunLight.shadow.camera.near = 0.5;
   sunLight.shadow.camera.far = 20;
   sunLight.shadow.camera.left = -6;

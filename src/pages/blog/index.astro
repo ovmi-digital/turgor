@@ -18,67 +18,78 @@ const articles = [
   description="Build log and technical articles from Turgor, an autonomous greenhouse project."
   canonicalPath="/blog"
 >
-  <div class="mx-auto max-w-2xl px-6 py-12 md:py-20">
-    <header class="mb-16">
-      <a
-        href="/"
-        class="text-sm font-bold tracking-[0.2em] uppercase text-white/50
-               hover:text-white/90 transition-colors duration-300"
-      >
-        Turgor
-      </a>
-      <h1
-        class="mt-4 font-black tracking-tight leading-none"
-        style="font-size: clamp(2rem, 5vw, 3.5rem);"
-      >
-        Blog
-      </h1>
-    </header>
+  <div class="relative">
+    <div
+      class="absolute inset-x-0 top-0 h-[40vh] bg-cover bg-center"
+      style="background-image: url('/images/blog-hero.webp'); opacity: 0.08;"
+    ></div>
+    <div
+      class="absolute inset-x-0 top-0 h-[40vh]"
+      style="background: linear-gradient(to bottom, transparent 60%, var(--color-blog-bg) 100%);"
+    ></div>
 
-    <ul class="space-y-12">
-      {articles.map((article) => (
-        <li>
-          <a
-            href={`/blog/${article.slug}`}
-            class="group block"
-          >
-            <time
-              datetime={article.date}
-              class="text-xs font-bold tracking-[0.15em] uppercase text-white/30"
-            >
-              {new Date(article.date).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </time>
-            <h2
-              class="mt-2 font-black tracking-tight leading-tight
-                     text-white/90 group-hover:text-white
-                     transition-colors duration-300"
-              style="font-size: clamp(1.25rem, 3vw, 1.75rem);"
-            >
-              {article.title}
-            </h2>
-            <p class="mt-2 text-sm leading-relaxed text-white/50
-                      group-hover:text-white/70 transition-colors duration-300">
-              {article.description}
-            </p>
-          </a>
-        </li>
-      ))}
-    </ul>
+    <div class="relative mx-auto max-w-2xl px-6 py-12 md:py-20">
+      <header class="mb-16">
+        <a
+          href="/"
+          class="text-sm font-bold tracking-[0.2em] uppercase text-[var(--color-blog-accent)]
+                 hover:text-[var(--color-blog-accent-light)] transition-colors duration-300"
+        >
+          Turgor
+        </a>
+        <h1
+          class="mt-4 font-black tracking-tight leading-none"
+          style="font-size: clamp(2rem, 5vw, 3.5rem);"
+        >
+          Blog
+        </h1>
+      </header>
 
-    <footer class="mt-24 border-t border-white/10 pt-8">
-      <a
-        href="https://ovmi.digital"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-xs font-bold tracking-[0.2em] uppercase text-white/30
-               hover:text-white/60 transition-colors duration-300"
-      >
-        An Ovmi project
-      </a>
-    </footer>
+      <ul class="space-y-12">
+        {articles.map((article) => (
+          <li>
+            <a
+              href={`/blog/${article.slug}`}
+              class="group block"
+            >
+              <time
+                datetime={article.date}
+                class="text-xs font-bold tracking-[0.15em] uppercase text-[var(--color-blog-muted)]"
+              >
+                {new Date(article.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </time>
+              <h2
+                class="mt-2 font-black tracking-tight leading-tight
+                       text-[var(--color-blog-text)] group-hover:text-[var(--color-blog-accent)]
+                       transition-colors duration-300"
+                style="font-size: clamp(1.25rem, 3vw, 1.75rem);"
+              >
+                {article.title}
+              </h2>
+              <p class="mt-2 text-sm leading-relaxed text-[var(--color-blog-muted)]
+                        group-hover:text-[var(--color-blog-text)] transition-colors duration-300">
+                {article.description}
+              </p>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <footer class="mt-24 border-t border-[var(--color-blog-border)] pt-8">
+        <a
+          href="https://ovmi.digital"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-xs font-bold tracking-[0.2em] uppercase text-[var(--color-blog-muted)]
+                 hover:text-[var(--color-blog-accent)] transition-colors duration-300"
+        >
+          An Ovmi project
+        </a>
+      </footer>
+    </div>
   </div>
 </BlogLayout>

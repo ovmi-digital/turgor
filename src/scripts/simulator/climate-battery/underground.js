@@ -18,7 +18,7 @@ export function createUnderground(scene, { floors = [] } = {}) {
   const gravelMat = new THREE.MeshStandardMaterial({ color: 0xbbbbaa, roughness: 0.85 });
   const soilMat = new THREE.MeshStandardMaterial({ color: 0x6b4423, roughness: 0.9 });
   const deepSoilMat = new THREE.MeshStandardMaterial({ color: 0x4a2f15, roughness: 0.95 });
-  const pipeBedMat = new THREE.MeshStandardMaterial({ color: 0xa89878, roughness: 0.8 });
+  const pipeBedMat = new THREE.MeshStandardMaterial({ color: 0xc4b08a, roughness: 0.75 });
   const drainGravelMat = new THREE.MeshStandardMaterial({ color: 0x999988, roughness: 0.85 });
   const plywoodMat = new THREE.MeshStandardMaterial({ color: 0xc9a96e, roughness: 0.7 });
   const pvcMat = new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: 0.4 });

@@ -4,7 +4,7 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
 
 <BlogLayout
   title="The Climate Battery — Turgor"
-  description="Underground thermal storage for a 4x5m greenhouse. Interactive 3D simulation included."
+  description="Designing an underground thermal storage system for a 4×5m greenhouse — pipes, gravel beds, manifolds, and a solar-powered fan. No grid, no fuel."
   canonicalPath="/blog/climate-battery-system"
 >
   <article class="mx-auto max-w-2xl px-6 pt-12 md:pt-20">
@@ -64,9 +64,12 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
         <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">Our Design</h2>
         <p>
           We designed this for a 4 × 5 meter greenhouse. Eight 110mm corrugated drainage pipes
-          run the full length in two layers — four at 80cm depth, four at 120cm. A 12V inline fan
-          mounted in the north riser moves air at roughly 100–150 m³/h. The whole system runs off
-          a 50W solar panel and a small battery. No grid connection.
+          run the full length in two layers — four at 80cm depth, four at 120cm. Each pipe sits
+          in a gravel bed — 15cm of clean 20mm gravel surrounding the pipe on all sides. The gravel
+          prevents soil from clogging the corrugations and ensures condensation drains freely
+          instead of pooling. A 12V inline fan mounted in the south riser moves air at roughly
+          100–150 m³/h. The whole system runs off a 50W solar panel and a small battery.
+          No grid connection.
         </p>
       </section>
     </div>
@@ -142,7 +145,7 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
         <h2 class="text-base font-black text-[var(--color-blog-accent)] mb-3">System Specs</h2>
         <p>
           4 &times; 5 m greenhouse. 8 &times; 110 mm corrugated pipes in 2 layers at 80 cm and 120 cm depth.
-          12V solar-powered inline fan. Passive thermal storage in soil mass.
+          Gravel-bedded pipe runs for drainage. 12V solar-powered inline fan. Passive thermal storage in soil mass.
         </p>
       </section>
 
@@ -153,6 +156,14 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
             <summary class="text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Pipes</summary>
             <p class="mt-1" style="color: var(--color-blog-muted);">
               110 mm corrugated drainage pipe. 8 runs in 2 layers (4 per layer). 50 cm spacing, 50 cm from walls. ~40 m total length.
+              Each pipe bedded in 20 mm clean gravel — prevents soil intrusion and ensures condensation drainage.
+            </p>
+          </details>
+          <details>
+            <summary class="text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity">Gravel Bed</summary>
+            <p class="mt-1" style="color: var(--color-blog-muted);">
+              20 mm clean gravel, 15 cm thick around each pipe. Prevents soil from clogging corrugations, drains condensation,
+              and improves heat transfer between air and surrounding thermal mass.
             </p>
           </details>
           <details id="detail-manifold">

@@ -1,0 +1,106 @@
+---
+import "../styles/global.css";
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Turgor — Autonomous greenhouse intelligence. Open source. Growing soon."
+    />
+    <title>Turgor — Growing Soon</title>
+
+    <link
+      rel="preload"
+      href="/fonts/Satoshi-Variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <meta property="og:title" content="Turgor — Growing Soon" />
+    <meta
+      property="og:description"
+      content="Autonomous greenhouse intelligence. Open source. From silicon to soil."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://turgor.garden" />
+    <meta
+      property="og:image"
+      content="https://turgor.garden/images/turgor-hero.webp"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://turgor.garden" />
+  </head>
+
+  <body>
+    <div class="relative h-screen w-screen">
+      <!-- Background video (fallback to image) -->
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        poster="/images/turgor-hero.webp"
+        class="absolute inset-0 h-full w-full object-cover"
+      >
+        <source src="/images/turgor-hero.mp4" type="video/mp4" />
+      </video>
+
+      <!-- Dark overlay for text legibility -->
+      <div class="absolute inset-0 bg-black/40"></div>
+
+      <!-- Content -->
+      <div
+        class="relative z-10 flex h-full flex-col
+               justify-between px-6 py-8 md:px-12 md:py-12"
+      >
+        <!-- Top: Turgor wordmark -->
+        <div>
+          <h1
+            class="font-black tracking-tight leading-none"
+            style="font-size: clamp(2.5rem, 7vw, 5rem);"
+          >
+            Turgor
+          </h1>
+        </div>
+
+        <!-- Center: Main message -->
+        <div class="max-w-lg">
+          <p
+            class="font-black leading-[1.1] tracking-tight"
+            style="font-size: clamp(1.5rem, 4vw, 2.5rem);"
+          >
+            Something is taking root.
+          </p>
+          <p class="mt-4 text-sm leading-relaxed text-white/60 max-w-sm">
+            Autonomous greenhouse intelligence.<br />
+            Open source. From silicon to soil.
+          </p>
+        </div>
+
+        <!-- Bottom: Attribution -->
+        <div
+          class="flex flex-col gap-2 sm:flex-row
+                 sm:items-center sm:justify-between"
+        >
+          <a
+            href="https://ovmi.digital"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-xs font-bold tracking-[0.2em] uppercase
+                   text-white/50 hover:text-white/90
+                   transition-opacity duration-300"
+          >
+            An Ovmi project
+          </a>
+          <p class="text-xs text-white/30">
+            turgor.garden
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -3,8 +3,8 @@ import { GH } from './greenhouse.js';
 
 const DAY_TOP = new THREE.Color(0x87CEEB);
 const DAY_HORIZON = new THREE.Color(0xE8F0F5);
-const NIGHT_TOP = new THREE.Color(0x0A1628);
-const NIGHT_HORIZON = new THREE.Color(0x1A2744);
+const NIGHT_TOP = new THREE.Color(0x152040);
+const NIGHT_HORIZON = new THREE.Color(0x2A3858);
 
 const SKY_VERTEX = `
   varying vec3 vWorldPosition;
@@ -150,14 +150,14 @@ export function createEnvironment(scene) {
       skyMat.uniforms.horizonColor.value.copy(DAY_HORIZON).lerp(NIGHT_HORIZON, 1 - t);
 
       sunLight.color.copy(daySunColor).lerp(nightSunColor, 1 - t);
-      sunLight.intensity = 0.3 + t * 1.7;
-      ambientLight.intensity = 0.15 + t * 0.25;
-      hemiLight.intensity = 0.1 + t * 0.2;
+      sunLight.intensity = 0.6 + t * 1.4;
+      ambientLight.intensity = 0.3 + t * 0.1;
+      hemiLight.intensity = 0.2 + t * 0.1;
 
       starsMat.opacity = 1 - t;
 
       const dayGreen = 0x4A7C59;
-      const nightGreen = 0x1A2E22;
+      const nightGreen = 0x2A3E32;
       groundMat.color.set(dayGreen).lerp(new THREE.Color(nightGreen), 1 - t);
     },
 

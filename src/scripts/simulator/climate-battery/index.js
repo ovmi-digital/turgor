@@ -38,10 +38,10 @@ export function init(canvasEl, viewport) {
     { text: 'Solar Panel', pos: v(hw * 0.4, components.solarY + 0.2, 0), detail: 'detail-solar' },
     { text: 'Battery', pos: v(hw - 0.2, 0.35, hl - 0.3), detail: 'detail-battery' },
     { text: 'Thermostat', pos: v(RISER_X + 0.1, 0.55, RISER_NORTH_Z), detail: 'detail-thermostat' },
-    { text: 'Manifold N', pos: v(0, -0.65, hl - 0.35), detail: 'detail-manifold' },
-    { text: 'Manifold S', pos: v(0, -0.65, -hl + 0.35), detail: 'detail-manifold' },
-    { text: 'Pipe Layer 1', pos: v(-0.5, -0.8, 0), detail: 'detail-pipes' },
-    { text: 'Pipe Layer 2', pos: v(0.5, -1.2, 0), detail: 'detail-pipes' },
+    { text: 'Manifold N', pos: v(0, -0.65, hl - 0.35), detail: 'detail-manifold', group: 'underground' },
+    { text: 'Manifold S', pos: v(0, -0.65, -hl + 0.35), detail: 'detail-manifold', group: 'underground' },
+    { text: 'Pipe Layer 1', pos: v(-0.5, -0.8, 0), detail: 'detail-pipes', group: 'underground' },
+    { text: 'Pipe Layer 2', pos: v(0.5, -1.2, 0), detail: 'detail-pipes', group: 'underground' },
   ]);
 
   // State
@@ -123,7 +123,11 @@ export function init(canvasEl, viewport) {
     },
     getTime() { return timeMinutes; },
     getIsDay() { return isDay; },
-    toggleCutaway() { return underground.toggleCutaway(); },
+    toggleCutaway() {
+      const showing = underground.toggleCutaway();
+      labels.setGroupVisible('underground', showing);
+      return showing;
+    },
     toggleLabels() { return labels.toggle(); },
     resetCamera() { core.resetCamera(); },
   };

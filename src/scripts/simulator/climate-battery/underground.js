@@ -22,20 +22,14 @@ export function createUnderground(scene) {
 
   const undergroundGroup = new THREE.Group();
   scene.add(undergroundGroup);
-  const cutawayCover = new THREE.Group();
-  scene.add(cutawayCover);
+  const solidCover = new THREE.Group();
+  scene.add(solidCover);
 
-  function addSoilLayer(group, yTop, yBot, material) {
+  function addCutawaySoil(group, yTop, yBot, material) {
     const thickness = yTop - yBot;
     const yCenter = (yTop + yBot) / 2;
     addBox(group, hw, thickness, GH.l, material, hw / 2, yCenter, 0);
     addBox(group, hw, thickness, hl, material, -hw / 2, yCenter, hl / 2);
-  }
-
-  function addSoilCover(group, yTop, yBot, material) {
-    const thickness = yTop - yBot;
-    const yCenter = (yTop + yBot) / 2;
-    addBox(group, hw, thickness, hl, material, -hw / 2, yCenter, -hl / 2);
   }
 
   const layers = [
@@ -48,8 +42,10 @@ export function createUnderground(scene) {
     [-1.50, -1.80, deepSoilMat],
   ];
   for (const [top, bot, mat] of layers) {
-    addSoilLayer(undergroundGroup, top, bot, mat);
-    addSoilCover(cutawayCover, top, bot, mat);
+    addCutawaySoil(undergroundGroup, top, bot, mat);
+    const thickness = top - bot;
+    const yCenter = (top + bot) / 2;
+    addBox(solidCover, GH.w, thickness, GH.l, mat, 0, yCenter, 0);
   }
 
   const crossMat = new THREE.MeshStandardMaterial({
@@ -99,14 +95,16 @@ export function createUnderground(scene) {
   soilGlow.position.set(0, -0.9, 0);
   undergroundGroup.add(soilGlow);
 
-  cutawayCover.visible = false;
+  solidCover.visible = false;
 
   return {
     riserCaps,
     soilGlow,
     toggleCutaway() {
-      cutawayCover.visible = !cutawayCover.visible;
-      return !cutawayCover.visible;
+      const showCutaway = solidCover.visible;
+      solidCover.visible = !showCutaway;
+      undergroundGroup.visible = showCutaway;
+      return showCutaway;
     },
   };
 }

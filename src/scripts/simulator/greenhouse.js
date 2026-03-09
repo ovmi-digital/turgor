@@ -167,5 +167,5 @@ export function createGreenhouse(scene) {
   eastRoof.rotation.order = 'ZYX';
   glassGroup.add(eastRoof);
 
-  return { group: ghGroup, roofAngle };
+  return { group: ghGroup, roofAngle, floorMesh, innerFloor };
 }

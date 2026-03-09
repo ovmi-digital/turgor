@@ -8,7 +8,7 @@ const RISER_X = 0;
 export const RISER_NORTH_Z = 2.0;
 export const RISER_SOUTH_Z = -2.0;
 
-export function createUnderground(scene) {
+export function createUnderground(scene, { floors = [] } = {}) {
   const hw = GH.w / 2;
   const hl = GH.l / 2;
 
@@ -104,6 +104,7 @@ export function createUnderground(scene) {
       const showCutaway = solidCover.visible;
       solidCover.visible = !showCutaway;
       undergroundGroup.visible = showCutaway;
+      for (const f of floors) f.visible = !showCutaway;
       return showCutaway;
     },
   };

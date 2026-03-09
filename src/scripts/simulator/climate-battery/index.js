@@ -12,7 +12,9 @@ export function init(canvasEl, viewport) {
   const core = createCore(canvasEl, viewport);
   const env = createEnvironment(core.scene);
   const gh = createGreenhouse(core.scene);
-  const underground = createUnderground(core.scene);
+  const underground = createUnderground(core.scene, {
+    floors: [gh.floorMesh, gh.innerFloor],
+  });
   const components = createComponents(core.scene, gh);
   const particles = createParticles(core.scene);
   const temp = createTemperatureModel();

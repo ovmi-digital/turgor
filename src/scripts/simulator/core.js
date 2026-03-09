@@ -17,7 +17,7 @@ export function createCore(canvas, viewport) {
     0.5,
     80
   );
-  camera.position.set(7, 5, -7);
+  camera.position.set(-6, 5, -6);
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(viewport.clientWidth, viewport.clientHeight);
@@ -32,7 +32,7 @@ export function createCore(canvas, viewport) {
   controls.dampingFactor = 0.08;
   controls.minDistance = 3;
   controls.maxDistance = 20;
-  controls.target.set(0, 0.5, 0);
+  controls.target.set(0, 0.3, 0);
   controls.maxPolarAngle = Math.PI * 0.48;
   controls.update();
 

@@ -90,6 +90,35 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
               </p>
             </div>
             <div id="labels-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+            <!-- Stats HUD -->
+            <div id="hud-stats" class="absolute bottom-3 left-3 pointer-events-none">
+              <div class="hud-panel">
+                <div class="flex items-center gap-3">
+                  <span id="mode-title" class="text-xs font-black uppercase tracking-wider">Storing Heat</span>
+                  <span class="hud-sep">·</span>
+                  <span id="time-display" class="text-sm font-black tabular-nums">12:00</span>
+                </div>
+                <div class="flex gap-4 mt-1.5">
+                  <div>
+                    <span class="hud-label">Outside</span>
+                    <span id="temp-outside" class="hud-value">-5°C</span>
+                  </div>
+                  <div>
+                    <span class="hud-label">Greenhouse</span>
+                    <span id="temp-greenhouse" class="hud-value" style="color:#F59E0B;">30°C</span>
+                  </div>
+                  <div>
+                    <span class="hud-label">Soil</span>
+                    <span id="temp-soil" class="hud-value" style="color:#EF4444;">20°C</span>
+                  </div>
+                  <div>
+                    <span class="hud-label">Fan</span>
+                    <span id="fan-status" class="hud-value">ON</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Compass HUD -->
             <div id="compass" class="absolute top-3 right-3 pointer-events-none" style="width:56px;height:56px;">
               <div id="compass-ring" style="width:100%;height:100%;position:relative;">
                 <svg viewBox="0 0 56 56" style="width:100%;height:100%;">
@@ -113,37 +142,6 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
               <p class="text-sm leading-relaxed">
                 4 &times; 5 m greenhouse. 8 &times; 110 mm corrugated pipes in 2 layers at 80 cm and 120 cm depth. 12V solar-powered inline fan. Passive thermal storage in soil mass.
               </p>
-            </div>
-
-            <!-- Mode Display -->
-            <div id="mode-card" class="panel-card rounded-lg p-4" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
-              <h3 id="mode-title" class="text-base font-black mb-3">Storing Heat</h3>
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <span class="block text-xs font-bold uppercase tracking-wide" style="color: var(--color-blog-muted);">Outside</span>
-                  <span id="temp-outside" class="text-xl font-black tabular-nums">-5°C</span>
-                </div>
-                <div>
-                  <span class="block text-xs font-bold uppercase tracking-wide" style="color: var(--color-blog-muted);">Greenhouse</span>
-                  <span id="temp-greenhouse" class="text-xl font-black tabular-nums" style="color: #F59E0B;">30°C</span>
-                </div>
-                <div>
-                  <span class="block text-xs font-bold uppercase tracking-wide" style="color: var(--color-blog-muted);">Soil Temp</span>
-                  <span id="temp-soil" class="text-xl font-black tabular-nums" style="color: #EF4444;">20°C</span>
-                </div>
-                <div>
-                  <span class="block text-xs font-bold uppercase tracking-wide" style="color: var(--color-blog-muted);">Fan</span>
-                  <span id="fan-status" class="text-xl font-black">ON</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Time Display -->
-            <div class="panel-card rounded-lg p-4" style="background: color-mix(in srgb, var(--color-blog-muted) 8%, transparent);">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold tracking-[0.15em] uppercase" style="color: var(--color-blog-muted);">Time</span>
-                <span id="time-display" class="text-2xl font-black tabular-nums">12:00</span>
-              </div>
             </div>
 
             <!-- Component Details -->
@@ -185,20 +183,16 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
         <!-- ═══════════════════════════════════════ BOTTOM CONTROLS -->
         <footer class="flex flex-wrap items-center gap-2 px-4 md:px-6 py-2 shrink-0 border-t"
                 style="border-color: color-mix(in srgb, var(--color-blog-muted) 20%, transparent);">
-          <div class="flex items-center gap-1 rounded-lg p-1" style="background: color-mix(in srgb, var(--color-blog-muted) 12%, transparent);">
-            <button id="btn-day" class="mode-btn active px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all" aria-label="Day mode">
-              Day
+          <div class="flex items-center gap-1.5">
+            <button id="btn-playpause" class="ctrl-btn active px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all" title="Play / Pause cycle">
+              ⏸
             </button>
-            <button id="btn-night" class="mode-btn px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all" aria-label="Night mode">
-              Night
-            </button>
+            <div class="flex items-center gap-1 rounded-lg p-1" style="background: color-mix(in srgb, var(--color-blog-muted) 12%, transparent);">
+              <button class="speed-btn px-2 py-1 rounded text-xs font-bold tracking-wide transition-all" data-speed="12" aria-label="0.5x speed">0.5×</button>
+              <button class="speed-btn active px-2 py-1 rounded text-xs font-bold tracking-wide transition-all" data-speed="24" aria-label="1x speed">1×</button>
+              <button class="speed-btn px-2 py-1 rounded text-xs font-bold tracking-wide transition-all" data-speed="72" aria-label="3x speed">3×</button>
+            </div>
           </div>
-          <label class="flex items-center gap-2 flex-1 min-w-0">
-            <span class="text-xs font-bold tracking-wide uppercase shrink-0 hidden sm:inline" style="color: var(--color-blog-muted);">Time</span>
-            <input id="time-slider" type="range" min="0" max="1440" value="720" step="1"
-                   class="flex-1 h-1.5 rounded-full appearance-none cursor-pointer"
-                   style="accent-color: var(--color-blog-accent);" />
-          </label>
           <div class="flex items-center gap-1.5">
             <button id="btn-cutaway" class="ctrl-btn active px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all" title="Toggle underground cutaway">
               Cutaway
@@ -268,17 +262,6 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
   <style is:inline>
     #canvas { width: 100%; height: 100%; display: block; }
 
-    .mode-btn {
-      background: transparent;
-      color: var(--color-blog-muted);
-      border: none;
-      cursor: pointer;
-    }
-    .mode-btn.active {
-      background: var(--color-blog-text);
-      color: var(--color-blog-bg);
-    }
-
     .ctrl-btn {
       background: transparent;
       color: var(--color-blog-muted);
@@ -292,21 +275,46 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
     }
     .ctrl-btn:hover { opacity: 0.7; }
 
-    input[type="range"] {
-      background: color-mix(in srgb, var(--color-blog-muted) 25%, transparent);
-    }
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: var(--color-blog-text);
-      cursor: pointer;
-    }
-
     details summary { list-style: none; }
     details summary::-webkit-details-marker { display: none; }
     details summary::before { content: '+ '; font-weight: 900; margin-right: 0.25rem; }
     details[open] summary::before { content: '- '; }
+
+    .hud-panel {
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: rgba(255,255,255,0.9);
+    }
+    .hud-sep { color: rgba(255,255,255,0.3); }
+    .hud-label {
+      font-size: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.45);
+      display: block;
+      line-height: 1;
+    }
+    .hud-value {
+      font-size: 13px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.3;
+    }
+
+    .speed-btn {
+      background: transparent;
+      color: var(--color-blog-muted);
+      border: none;
+      cursor: pointer;
+    }
+    .speed-btn.active {
+      background: var(--color-blog-text);
+      color: var(--color-blog-bg);
+    }
 
     .compass-dir {
       position: absolute;
@@ -339,27 +347,32 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
     const viewport = document.getElementById('viewport');
     const sim = init(canvas, viewport);
 
-    // Day/Night buttons
-    document.getElementById('btn-day').addEventListener('click', () => {
-      const t = sim.setMode(true);
-      document.getElementById('btn-day').classList.add('active');
-      document.getElementById('btn-night').classList.remove('active');
-      document.getElementById('time-slider').value = t;
-    });
-    document.getElementById('btn-night').addEventListener('click', () => {
-      const t = sim.setMode(false);
-      document.getElementById('btn-night').classList.add('active');
-      document.getElementById('btn-day').classList.remove('active');
-      document.getElementById('time-slider').value = t;
+    // Auto-cycle state
+    let playing = true;
+    let speed = 24; // minutes of sim per real second (24 = full day in 60s)
+
+    sim.onTick((dt) => {
+      if (!playing) return;
+      let t = sim.getTime() + dt * speed;
+      if (t >= 1440) t -= 1440;
+      sim.setTime(t);
     });
 
-    // Time slider
-    document.getElementById('time-slider').addEventListener('input', (e) => {
-      const minutes = parseInt(e.target.value);
-      sim.setTime(minutes);
-      const isDay = sim.getIsDay();
-      document.getElementById('btn-day').classList.toggle('active', isDay);
-      document.getElementById('btn-night').classList.toggle('active', !isDay);
+    // Play/Pause
+    const playBtn = document.getElementById('btn-playpause');
+    playBtn.addEventListener('click', () => {
+      playing = !playing;
+      playBtn.textContent = playing ? '⏸' : '▶';
+      playBtn.classList.toggle('active', playing);
+    });
+
+    // Speed buttons
+    document.querySelectorAll('.speed-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        speed = parseInt(btn.dataset.speed);
+        document.querySelectorAll('.speed-btn').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
     });
 
     // Toggle buttons

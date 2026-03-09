@@ -43,8 +43,8 @@ export function init(canvasEl, viewport) {
   labels.setVisible(false);
 
   // State
-  let isDay = true;
-  let timeMinutes = 720;
+  let isDay = false;
+  let timeMinutes = 0;
 
   // Raycasting
   const raycaster = new THREE.Raycaster();
@@ -86,8 +86,13 @@ export function init(canvasEl, viewport) {
   // Compass HUD
   const compassRing = document.getElementById('compass-ring');
 
+  // External tick hooks (for auto-cycle from page script)
+  const externalTicks = [];
+
   // Animation tick
   core.onTick((dt) => {
+    for (const cb of externalTicks) cb(dt);
+
     const temps = temp.getTemps(timeMinutes);
     env.update(dt);
     components.update(dt, temps.fanOn);
@@ -106,7 +111,8 @@ export function init(canvasEl, viewport) {
     }
   });
 
-  // Initial UI
+  // Initial UI — start at midnight
+  env.setDayNight(false);
   temp.updateUI(timeMinutes);
 
   // Start rendering
@@ -142,6 +148,7 @@ export function init(canvasEl, viewport) {
       gh.glassGroup.visible = show;
       return show;
     },
+    onTick(cb) { externalTicks.push(cb); },
     toggleLabels() { return labels.toggle(); },
     resetCamera() { core.resetCamera(); },
   };

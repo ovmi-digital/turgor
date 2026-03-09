@@ -139,6 +139,7 @@ export function createUnderground(scene, { floors = [] } = {}) {
   undergroundGroup.add(soilGlow);
 
   solidCover.visible = false;
+  for (const f of floors) f.visible = false;
 
   return {
     riserCaps,

@@ -1,0 +1,84 @@
+---
+import "../../layouts/BlogLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
+
+const articles = [
+  {
+    title: "The Climate Battery",
+    description:
+      "Underground thermal storage for a 4x5m greenhouse. Interactive 3D simulation included.",
+    date: "2026-03-09",
+    slug: "climate-battery-system",
+  },
+];
+---
+
+<BlogLayout
+  title="Blog — Turgor"
+  description="Build log and technical articles from Turgor, an autonomous greenhouse project."
+  canonicalPath="/blog"
+>
+  <div class="mx-auto max-w-2xl px-6 py-12 md:py-20">
+    <header class="mb-16">
+      <a
+        href="/"
+        class="text-sm font-bold tracking-[0.2em] uppercase text-white/50
+               hover:text-white/90 transition-colors duration-300"
+      >
+        Turgor
+      </a>
+      <h1
+        class="mt-4 font-black tracking-tight leading-none"
+        style="font-size: clamp(2rem, 5vw, 3.5rem);"
+      >
+        Blog
+      </h1>
+    </header>
+
+    <ul class="space-y-12">
+      {articles.map((article) => (
+        <li>
+          <a
+            href={`/blog/${article.slug}`}
+            class="group block"
+          >
+            <time
+              datetime={article.date}
+              class="text-xs font-bold tracking-[0.15em] uppercase text-white/30"
+            >
+              {new Date(article.date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </time>
+            <h2
+              class="mt-2 font-black tracking-tight leading-tight
+                     text-white/90 group-hover:text-white
+                     transition-colors duration-300"
+              style="font-size: clamp(1.25rem, 3vw, 1.75rem);"
+            >
+              {article.title}
+            </h2>
+            <p class="mt-2 text-sm leading-relaxed text-white/50
+                      group-hover:text-white/70 transition-colors duration-300">
+              {article.description}
+            </p>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <footer class="mt-24 border-t border-white/10 pt-8">
+      <a
+        href="https://ovmi.digital"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-xs font-bold tracking-[0.2em] uppercase text-white/30
+               hover:text-white/60 transition-colors duration-300"
+      >
+        An Ovmi project
+      </a>
+    </footer>
+  </div>
+</BlogLayout>

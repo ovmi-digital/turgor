@@ -11,6 +11,7 @@ export const RISER_SOUTH_Z = -2.0;
 export function createUnderground(scene, { floors = [] } = {}) {
   const hw = GH.w / 2;
   const hl = GH.l / 2;
+  const EPS = 0.003;
 
   const pipeMat = new THREE.MeshStandardMaterial({ color: 0x555555, roughness: 0.6 });
   const gravelMat = new THREE.MeshStandardMaterial({ color: 0xbbbbaa, roughness: 0.85 });
@@ -26,9 +27,9 @@ export function createUnderground(scene, { floors = [] } = {}) {
   scene.add(solidCover);
 
   function addCutawaySoil(group, yTop, yBot, material) {
-    const thickness = yTop - yBot;
+    const thickness = (yTop - yBot) - EPS;
     const yCenter = (yTop + yBot) / 2;
-    addBox(group, hw, thickness, GH.l, material, hw / 2, yCenter, 0);
+    addBox(group, hw + EPS, thickness, GH.l, material, hw / 2, yCenter, 0);
     addBox(group, hw, thickness, hl, material, -hw / 2, yCenter, hl / 2);
   }
 
@@ -43,19 +44,20 @@ export function createUnderground(scene, { floors = [] } = {}) {
   ];
   for (const [top, bot, mat] of layers) {
     addCutawaySoil(undergroundGroup, top, bot, mat);
-    const thickness = top - bot;
+    const thickness = (top - bot) - EPS;
     const yCenter = (top + bot) / 2;
     addBox(solidCover, GH.w, thickness, GH.l, mat, 0, yCenter, 0);
   }
 
   const crossMat = new THREE.MeshStandardMaterial({
     color: 0x5a3a1a, roughness: 0.9, side: THREE.DoubleSide,
+    polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1,
   });
   const crossFront = new THREE.Mesh(new THREE.PlaneGeometry(hw, 1.80), crossMat);
-  crossFront.position.set(-hw / 2, -0.9, 0);
+  crossFront.position.set(-hw / 2, -0.9, -EPS);
   undergroundGroup.add(crossFront);
   const crossSide = new THREE.Mesh(new THREE.PlaneGeometry(hl, 1.80), crossMat);
-  crossSide.position.set(0, -0.9, -hl / 2);
+  crossSide.position.set(-EPS, -0.9, -hl / 2);
   crossSide.rotation.y = Math.PI / 2;
   undergroundGroup.add(crossSide);
 

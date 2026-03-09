@@ -14,8 +14,8 @@ export function createCore(canvas, viewport) {
   const camera = new THREE.PerspectiveCamera(
     45,
     viewport.clientWidth / viewport.clientHeight,
-    0.1,
-    100
+    0.5,
+    80
   );
   camera.position.set(7, 5, -7);
 

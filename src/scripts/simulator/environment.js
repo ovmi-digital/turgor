@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GH } from './greenhouse.js';
 
 const DAY_TOP = new THREE.Color(0x87CEEB);
 const DAY_HORIZON = new THREE.Color(0xE8F0F5);
@@ -72,8 +73,24 @@ export function createEnvironment(scene) {
   scene.add(sun);
 
   const groundMat = new THREE.MeshStandardMaterial({ color: 0x4A7C59, roughness: 0.95 });
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), groundMat);
-  ground.rotation.x = -Math.PI / 2;
+  const hw = GH.w / 2;
+  const hl = GH.l / 2;
+  const groundShape = new THREE.Shape();
+  groundShape.moveTo(-40, -40);
+  groundShape.lineTo(40, -40);
+  groundShape.lineTo(40, 40);
+  groundShape.lineTo(-40, 40);
+  groundShape.closePath();
+  const hole = new THREE.Path();
+  hole.moveTo(-hw, -hl);
+  hole.lineTo(hw, -hl);
+  hole.lineTo(hw, hl);
+  hole.lineTo(-hw, hl);
+  hole.closePath();
+  groundShape.holes.push(hole);
+  const groundGeo = new THREE.ShapeGeometry(groundShape);
+  groundGeo.rotateX(-Math.PI / 2);
+  const ground = new THREE.Mesh(groundGeo, groundMat);
   ground.position.y = -0.01;
   ground.receiveShadow = true;
   scene.add(ground);

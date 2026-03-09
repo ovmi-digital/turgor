@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Variable.woff2") format("woff2");
+  font-weight: 300 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+@theme {
+  --font-sans: "Satoshi", system-ui, sans-serif;
+  --color-blog-bg: #FAFAF8;
+  --color-blog-text: #1A1A1A;
+  --color-blog-muted: #6B7264;
+  --color-blog-accent: #1B4332;
+  --color-blog-accent-light: #2D6A4F;
+  --color-blog-border: #E2E0DB;
+  --color-blog-surface: #F0EFE9;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-blog-bg);
+  color: var(--color-blog-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: rgba(27, 67, 50, 0.15);
+  color: inherit;
+}

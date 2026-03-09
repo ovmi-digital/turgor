@@ -5,8 +5,9 @@ const PIPE_RADIUS = 0.055;
 const PIPE_XS = [-1.5, -0.5, 0.5, 1.5];
 export const PIPE_LAYERS = [-0.8, -1.2];
 const RISER_X = 0;
-export const RISER_NORTH_Z = 2.0;
-export const RISER_SOUTH_Z = -2.0;
+const MANIFOLD_D = 0.35;
+export const RISER_NORTH_Z = GH.l / 2 - MANIFOLD_D / 2 - 0.05;
+export const RISER_SOUTH_Z = -(GH.l / 2 - MANIFOLD_D / 2 - 0.05);
 
 export function createUnderground(scene, { floors = [] } = {}) {
   const hw = GH.w / 2;
@@ -84,24 +85,23 @@ export function createUnderground(scene, { floors = [] } = {}) {
   // Manifolds — collector boxes spanning all pipes and both layers
   const manifoldW = PIPE_XS[PIPE_XS.length - 1] - PIPE_XS[0] + 0.4;
   const manifoldH = Math.abs(PIPE_LAYERS[0] - PIPE_LAYERS[1]) + 0.3;
-  const manifoldD = 0.35;
   const manifoldY = (PIPE_LAYERS[0] + PIPE_LAYERS[1]) / 2;
-  const manifoldNZ = hl - manifoldD / 2 - 0.05;
-  const manifoldSZ = -hl + manifoldD / 2 + 0.05;
+  const manifoldNZ = RISER_NORTH_Z;
+  const manifoldSZ = RISER_SOUTH_Z;
 
   const manifoldN = addBox(
-    undergroundGroup, manifoldW, manifoldH, manifoldD, plywoodMat,
+    undergroundGroup, manifoldW, manifoldH, MANIFOLD_D, plywoodMat,
     0, manifoldY, manifoldNZ,
   );
   manifoldN.userData = { type: 'manifold' };
   const manifoldS = addBox(
-    undergroundGroup, manifoldW, manifoldH, manifoldD, plywoodMat,
+    undergroundGroup, manifoldW, manifoldH, MANIFOLD_D, plywoodMat,
     0, manifoldY, manifoldSZ,
   );
   manifoldS.userData = { type: 'manifold' };
 
   // Pipes — terminate at manifold faces
-  const pipeLen = Math.abs(manifoldNZ - manifoldSZ) - manifoldD;
+  const pipeLen = Math.abs(manifoldNZ - manifoldSZ) - MANIFOLD_D;
   for (const layerY of PIPE_LAYERS) {
     for (const px of PIPE_XS) {
       const pipeGeo = new THREE.CylinderGeometry(PIPE_RADIUS, PIPE_RADIUS, pipeLen, 12);
@@ -113,20 +113,25 @@ export function createUnderground(scene, { floors = [] } = {}) {
     }
   }
 
-  const riserGeo = new THREE.CylinderGeometry(PIPE_RADIUS, PIPE_RADIUS, 1.2, 12);
+  // Risers — vertical pipes from manifold top to above ground
+  const manifoldTop = manifoldY + manifoldH / 2;
+  const riserTop = 0.25;
+  const riserH = riserTop - manifoldTop;
+  const riserCenterY = (manifoldTop + riserTop) / 2;
+  const riserGeo = new THREE.CylinderGeometry(PIPE_RADIUS, PIPE_RADIUS, riserH, 12);
   const riserA = new THREE.Mesh(riserGeo, pvcMat);
-  riserA.position.set(RISER_X, -0.35, RISER_NORTH_Z);
+  riserA.position.set(RISER_X, riserCenterY, manifoldNZ);
   riserA.userData = { type: 'riser' };
   undergroundGroup.add(riserA);
   const riserB = new THREE.Mesh(riserGeo.clone(), pvcMat);
-  riserB.position.set(RISER_X, -0.35, RISER_SOUTH_Z);
+  riserB.position.set(RISER_X, riserCenterY, manifoldSZ);
   riserB.userData = { type: 'riser' };
   undergroundGroup.add(riserB);
 
   const riserCapGeo = new THREE.CylinderGeometry(PIPE_RADIUS + 0.01, PIPE_RADIUS + 0.01, 0.3, 12);
   const riserCaps = [
-    { mesh: new THREE.Mesh(riserCapGeo, pvcMat), pos: [RISER_X, 0.15, RISER_NORTH_Z] },
-    { mesh: new THREE.Mesh(riserCapGeo.clone(), pvcMat), pos: [RISER_X, 0.15, RISER_SOUTH_Z] },
+    { mesh: new THREE.Mesh(riserCapGeo, pvcMat), pos: [RISER_X, 0.15, manifoldNZ] },
+    { mesh: new THREE.Mesh(riserCapGeo.clone(), pvcMat), pos: [RISER_X, 0.15, manifoldSZ] },
   ];
 
   const soilGlow = new THREE.PointLight(0xff6600, 0, 2);

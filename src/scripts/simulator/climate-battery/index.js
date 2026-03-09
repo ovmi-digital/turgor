@@ -35,7 +35,6 @@ export function init(canvasEl, viewport) {
   labels.add([
     { text: 'Riser A (Fan)', pos: v(RISER_X, 0.65, RISER_NORTH_Z), detail: 'detail-fan' },
     { text: 'Riser B', pos: v(RISER_X, 0.65, RISER_SOUTH_Z), detail: 'detail-risers' },
-    { text: 'Thermostat', pos: v(RISER_X + 0.1, 0.55, RISER_NORTH_Z), detail: 'detail-thermostat' },
     { text: 'Manifold N', pos: v(0, -0.7, RISER_NORTH_Z), detail: 'detail-manifold', group: 'underground' },
     { text: 'Manifold S', pos: v(0, -0.7, RISER_SOUTH_Z), detail: 'detail-manifold', group: 'underground' },
     { text: 'Pipe Layer 1', pos: v(-0.5, -0.8, 0), detail: 'detail-pipes', group: 'underground' },
@@ -72,7 +71,7 @@ export function init(canvasEl, viewport) {
     if (!hoveredObject || !hoveredObject.userData.type) return;
     const typeMap = {
       pipe: 'detail-pipes', manifold: 'detail-manifold', fan: 'detail-fan',
-      thermostat: 'detail-thermostat', riser: 'detail-risers',
+      riser: 'detail-risers',
     };
     const detailId = typeMap[hoveredObject.userData.type];
     if (detailId) {

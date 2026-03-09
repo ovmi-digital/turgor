@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { createCore } from '../core.js';
 import { createEnvironment } from '../environment.js';
-import { createGreenhouse, GH } from '../greenhouse.js';
+import { createGreenhouse } from '../greenhouse.js';
 import { createLabels } from '../labels.js';
 import { createUnderground, RISER_NORTH_Z, RISER_SOUTH_Z } from './underground.js';
 import { createComponents } from './components.js';
@@ -15,12 +15,10 @@ export function init(canvasEl, viewport) {
   const underground = createUnderground(core.scene, {
     floors: [gh.floorMesh, gh.innerFloor],
   });
-  const components = createComponents(core.scene, gh);
+  const components = createComponents(core.scene);
   const particles = createParticles(core.scene);
   const temp = createTemperatureModel();
 
-  const hw = GH.w / 2;
-  const hl = GH.l / 2;
   const RISER_X = 0;
 
   // Add riser caps to scene (above ground)
@@ -37,14 +35,13 @@ export function init(canvasEl, viewport) {
   labels.add([
     { text: 'Riser A (Fan)', pos: v(RISER_X, 0.65, RISER_NORTH_Z), detail: 'detail-fan' },
     { text: 'Riser B', pos: v(RISER_X, 0.65, RISER_SOUTH_Z), detail: 'detail-risers' },
-    { text: 'Solar Panel', pos: v(hw * 0.4, components.solarY + 0.2, 0), detail: 'detail-solar' },
-    { text: 'Battery', pos: v(hw - 0.2, 0.35, hl - 0.3), detail: 'detail-battery' },
     { text: 'Thermostat', pos: v(RISER_X + 0.1, 0.55, RISER_NORTH_Z), detail: 'detail-thermostat' },
     { text: 'Manifold N', pos: v(0, -0.7, RISER_NORTH_Z), detail: 'detail-manifold', group: 'underground' },
     { text: 'Manifold S', pos: v(0, -0.7, RISER_SOUTH_Z), detail: 'detail-manifold', group: 'underground' },
     { text: 'Pipe Layer 1', pos: v(-0.5, -0.8, 0), detail: 'detail-pipes', group: 'underground' },
     { text: 'Pipe Layer 2', pos: v(0.5, -1.2, 0), detail: 'detail-pipes', group: 'underground' },
   ]);
+  labels.setVisible(false);
 
   // State
   let isDay = true;
@@ -75,7 +72,6 @@ export function init(canvasEl, viewport) {
     if (!hoveredObject || !hoveredObject.userData.type) return;
     const typeMap = {
       pipe: 'detail-pipes', manifold: 'detail-manifold', fan: 'detail-fan',
-      solar: 'detail-solar', battery: 'detail-battery',
       thermostat: 'detail-thermostat', riser: 'detail-risers',
     };
     const detailId = typeMap[hoveredObject.userData.type];

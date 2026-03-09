@@ -1,12 +1,8 @@
 import * as THREE from 'three';
-import { GH, addBox } from '../greenhouse.js';
+import { addBox } from '../greenhouse.js';
 import { RISER_NORTH_Z } from './underground.js';
 
-export function createComponents(scene, greenhouse) {
-  const hw = GH.w / 2;
-  const hl = GH.l / 2;
-  const wh = GH.wallH;
-  const ph = GH.peakH;
+export function createComponents(scene) {
   const RISER_X = 0;
 
   const fanGroup = new THREE.Group();
@@ -32,18 +28,6 @@ export function createComponents(scene, greenhouse) {
   }
   fanGroup.userData = { type: 'fan' };
 
-  const solarMat = new THREE.MeshStandardMaterial({ color: 0x1a3a5c, metalness: 0.6, roughness: 0.3 });
-  const solarPanel = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.03, 1.2), solarMat);
-  const solarY = (wh + ph) / 2 + 0.15;
-  solarPanel.position.set(hw * 0.4, solarY, 0);
-  solarPanel.rotation.z = -greenhouse.roofAngle;
-  solarPanel.userData = { type: 'solar' };
-  scene.add(solarPanel);
-
-  const batteryMat = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.5 });
-  const battery = addBox(scene, 0.25, 0.2, 0.15, batteryMat, hw - 0.2, 0.1, hl - 0.3);
-  battery.userData = { type: 'battery' };
-
   const thermostatMat = new THREE.MeshStandardMaterial({ color: 0xeeeeee, roughness: 0.4 });
   const thermostat = addBox(scene, 0.06, 0.06, 0.03, thermostatMat, RISER_X + 0.1, 0.35, RISER_NORTH_Z);
   thermostat.userData = { type: 'thermostat' };
@@ -54,6 +38,5 @@ export function createComponents(scene, greenhouse) {
         fanBladesGroup.rotation.y += dt * 8;
       }
     },
-    solarY,
   };
 }

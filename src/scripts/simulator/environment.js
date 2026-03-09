@@ -67,11 +67,6 @@ export function createEnvironment(scene) {
   const sky = new THREE.Mesh(skyGeo, skyMat);
   scene.add(sky);
 
-  const sunMat = new THREE.MeshBasicMaterial({ color: 0xFFF8E1 });
-  const sun = new THREE.Mesh(new THREE.SphereGeometry(1.5, 8, 8), sunMat);
-  sun.position.set(15, 25, -10);
-  scene.add(sun);
-
   const groundMat = new THREE.MeshStandardMaterial({ color: 0x4A7C59, roughness: 0.95 });
   const hw = GH.w / 2;
   const hl = GH.l / 2;
@@ -153,9 +148,6 @@ export function createEnvironment(scene) {
 
       skyMat.uniforms.topColor.value.copy(DAY_TOP).lerp(NIGHT_TOP, 1 - t);
       skyMat.uniforms.horizonColor.value.copy(DAY_HORIZON).lerp(NIGHT_HORIZON, 1 - t);
-
-      sun.visible = t > 0.3;
-      sun.material.opacity = t;
 
       sunLight.color.copy(daySunColor).lerp(nightSunColor, 1 - t);
       sunLight.intensity = 0.3 + t * 1.7;

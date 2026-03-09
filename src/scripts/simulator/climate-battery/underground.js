@@ -101,11 +101,24 @@ export function createUnderground(scene, { floors = [] } = {}) {
   );
   manifoldS.userData = { type: 'manifold' };
 
-  // Pipes — terminate at manifold faces
+  // Pipes with gravel sleeves — terminate at manifold faces
   const pipeLen = Math.abs(manifoldNZ - manifoldSZ) - MANIFOLD_D;
+  const GRAVEL_R = PIPE_RADIUS + 0.10;
   for (const layerY of PIPE_LAYERS) {
     for (const px of PIPE_XS) {
-      const pipeGeo = new THREE.CylinderGeometry(PIPE_RADIUS, PIPE_RADIUS, pipeLen, 12);
+      // Gravel sleeve (larger cylinder behind the pipe)
+      const sleeveGeo = new THREE.CylinderGeometry(
+        GRAVEL_R, GRAVEL_R, pipeLen, 12,
+      );
+      sleeveGeo.rotateX(Math.PI / 2);
+      const sleeve = new THREE.Mesh(sleeveGeo, pipeBedMat);
+      sleeve.position.set(px, layerY, 0);
+      undergroundGroup.add(sleeve);
+
+      // Pipe
+      const pipeGeo = new THREE.CylinderGeometry(
+        PIPE_RADIUS, PIPE_RADIUS, pipeLen + 0.01, 12,
+      );
       pipeGeo.rotateX(Math.PI / 2);
       const pipe = new THREE.Mesh(pipeGeo, pipeMat);
       pipe.position.set(px, layerY, 0);

@@ -145,13 +145,15 @@ export function createGreenhouse(scene) {
   const roofGeo = new THREE.PlaneGeometry(roofSlope, GH.l);
   const westRoof = new THREE.Mesh(roofGeo, glassMat);
   westRoof.position.set(-hw / 2, (wh + ph) / 2, 0);
+  westRoof.rotation.order = 'XZY';
+  westRoof.rotation.x = -Math.PI / 2;
   westRoof.rotation.z = roofAngle;
-  westRoof.rotation.order = 'ZYX';
   glassGroup.add(westRoof);
   const eastRoof = new THREE.Mesh(roofGeo.clone(), glassMat);
   eastRoof.position.set(hw / 2, (wh + ph) / 2, 0);
+  eastRoof.rotation.order = 'XZY';
+  eastRoof.rotation.x = -Math.PI / 2;
   eastRoof.rotation.z = -roofAngle;
-  eastRoof.rotation.order = 'ZYX';
   glassGroup.add(eastRoof);
 
   return { group: ghGroup, frameGroup, glassGroup, floorMesh, innerFloor };
